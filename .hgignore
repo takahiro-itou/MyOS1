@@ -1,0 +1,7 @@
+
+syntax: glob
+*.img
+*.lst
+
+syntax: regexp
+
