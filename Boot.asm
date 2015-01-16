@@ -25,7 +25,7 @@ RootEntryCnt    DW      224
 TotalSectors    DW      2880
 MediaType       DB      0xF0
 SizeOfFAT       DW      9
-SecterPerTrack  DW      18
+SectorPerTrack  DW      18
 NumberOfHeads   DW      2
 HiddenSectors   DD      0
 TotalSector32   DD      0
@@ -65,6 +65,26 @@ msg:
         DB      "Hello, World"
         DB      0x0a, 0x0a
         DB      0
+
+;;----------------------------------------------------------------
+;;;   ディスクアクセス時のアドレスを変換する。
+;;
+;;  @param [in] AX   LBA アドレスを指定。
+;;  @param[out] CH   シリンダ番号。
+;;  @param[out] CL   セクタ番号。
+;;  @param[out] DH   ヘッド番号。
+;;
+ConvertLBAtoCHS:
+        XOR     DX, DX
+        DIV     WORD [SectorPerTrack]
+        INC     DL
+        MOV     CL, DL          ;   セクタ番号
+        XOR     DX, DX
+        DIV     WORD [NumberOfHeads]
+        MOV     DH, DL          ;   ヘッド番号。
+        MOV     CH, AL          ;   シリンダ番号
+        RET
+
 
 ;;----------------------------------------------------------------
 ;;
