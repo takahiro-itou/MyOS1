@@ -29,7 +29,7 @@ SectorPerTrack  DW      18
 NumberOfHeads   DW      2
 HiddenSectors   DD      0
 TotalSector32   DD      0
-DriverNumber    DB      0
+DriveNumber     DB      0
 Reserved1       DB      0
 BootSignature   DB      0x29
 VolSerialID     DD      0xFFFFFFFF
@@ -85,6 +85,35 @@ ConvertLBAtoCHS:
         MOV     CH, AL          ;   シリンダ番号
         RET
 
+;;----------------------------------------------------------------
+;;;   セクタを読み込む。
+;;
+;;  @param [in]     SI      読み込むセクタを、LBA で指定する。
+;;  @param [in,out] DI      最大リトライ回数。
+;;  @param    [out] ES:BX   読み込んだセクタを格納するアドレス。
+;;
+ReadSector:
+        MOV     DI, 0x0005
+        PUSH    BX
+        PUSH    CX
+        PUSH    SI
+READ_RETRY_LOOP:
+        MOV     AX, SI
+        CALL    ConvertLBAtoCHS
+        MOV     AX, 0x0201
+        MOV     DL, BYTE [DriveNumber]
+        INT     0x13
+        JNC     READ_SUCCESS
+        XOR     AX, AX
+        XOR     DX, DX
+        INT     0x13            ;   フロッピーをリセット
+        DEC     DI
+        JNZ     READ_RETRY_LOOP
+READ_SUCCESS:
+        POP     SI
+        POP     CX
+        POP     BX
+        RET
 
 ;;----------------------------------------------------------------
 ;;
