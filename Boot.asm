@@ -54,15 +54,16 @@ ENTRY_POINT:
         MOV     DS, AX
         MOV     ES, AX
 
+        PUSH    MSG_FILE_NOT_FOUND
+
         CALL    LoadFAT
 
-        MOV     BX, LOAD_ADDR_ROOTDIR
+        MOV     SI, LOAD_ADDR_ROOTDIR
         MOV     CX, WORD [RootEntryCnt]
-        MOV     SI, IplImageName
+        MOV     DI, IplImageName
         CALL    FindRootDirectoryEntry
 
-        MOV     SI, MSG_FILE_NOT_FOUND
-        TEST    BX, BX
+        TEST    SI, SI
         JZ      LOAD_FAILURE
 
         PUSH    DS
@@ -71,14 +72,17 @@ ENTRY_POINT:
         XOR     DI, DI
         MOV     DS, AX
         MOV     ES, AX
+        MOV     BX, SI
         CALL    ReadFile
         XOR     SI, SI
         CALL    PutString
         POP     ES
         POP     DS
 
-        MOV     SI, MSG_LOADING_OK
+        POP     SI
+        PUSH    MSG_LOADING_OK
 LOAD_FAILURE:
+        POP     SI
         CALL    PutString
 HALT_LOOP:
         HLT
@@ -185,13 +189,16 @@ ConvertLBAtoCHS:
 ;;----------------------------------------------------------------
 ;;;   ルートディレクトリ領域を検索する。
 ;;
-;;  @param [in]     SI   検索するファイル名。
-;;  @param [in]     CX   領域内のエントリ数。
-;;  @param [in,out] BX   領域の先頭アドレス。
+;;  @param [in] DI    検索するファイル名。
+;;  @param [in] CX    領域内のエントリ数。
+;;  @param [in] SI    領域の先頭アドレス。
+;;  @return     SI
+;;      -   ファイルが見つかった場合は、
+;;          そのファイルのエントリのアドレスを返す。
+;;      -   ファイルが見つからない場合はゼロを返す。
 ;;
 FindRootDirectoryEntry:
         PUSH    CX
-        MOV     DI, BX
         MOV     CX, 11
         PUSH    DI
         PUSH    SI
@@ -199,10 +206,10 @@ FindRootDirectoryEntry:
         POP     SI
         POP     DI
         JCXZ    FOUND_FILE
-        ADD     BX, 0x0020
+        ADD     SI, 0x0020
         POP     CX
         LOOP    FindRootDirectoryEntry
-        XOR     BX, BX          ;   エラー。
+        XOR     SI, SI          ;   エラー。
         RET
 
 FOUND_FILE:
