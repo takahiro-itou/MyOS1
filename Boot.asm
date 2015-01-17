@@ -73,8 +73,10 @@ LOAD_FAT:
         MOV     AX, WORD [SizeOfFAT]
         MUL     BYTE [NumberOfFATs]
         MOV     CX, AX          ;   読み込むセクタ数。
-        MOV     AX, WORD [RsvdSecCount]
+        MOV     SI, WORD [RsvdSecCount]
         MOV     BX, 0x7E00
+        CALL    ReadSectors
+
 READ_FAT_LOOP:
         CALL    ReadSector
         ADD     BX, WORD [BytesPerSec]
@@ -86,12 +88,27 @@ READ_FAT_LOOP:
 ;;----------------------------------------------------------------
 ;;;   セクタを読み込む。
 ;;
+;;  @param [in]     SI      先頭セクタ番号を、LBA で指定する。
+;;  @param [in]     CX      読み込むセクタ数。
+;;  @param    [out] ES:BX   読み込んだデータを格納するアドレス。
+;;
+ReadSectors:
+        MOV     DI, 0x0005
+        CALL    ReadOneSector
+        ADD     BX, WORD [BytesPerSec]
+        INC     SI
+        DEC     CX
+        JNZ     ReadSectors
+        RET
+
+;;----------------------------------------------------------------
+;;;   セクタを読み込む。
+;;
 ;;  @param [in]     SI      読み込むセクタを、LBA で指定する。
 ;;  @param [in,out] DI      最大リトライ回数。
-;;  @param    [out] ES:BX   読み込んだセクタを格納するアドレス。
+;;  @param    [out] ES:BX   読み込んだデータを格納するアドレス。
 ;;
-ReadSector:
-        MOV     DI, 0x0005
+ReadOneSector:
         PUSH    BX
         PUSH    CX
         PUSH    SI
