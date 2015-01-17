@@ -16,7 +16,7 @@ LOAD_ADDR_ROOTDIR   EQU     0xA200
 ;;
 ;;      BPB (Bios Parameter Block)
 ;;
-                JMP     entrypoint
+                JMP     ENTRY_POINT
                 DB      0x90
 
 OEMName         DB      "MyOS1   "
@@ -44,7 +44,7 @@ FileSystem      DB      "FAT12   "
 ;;
 ;;      Entry Point.
 ;;
-entrypoint:
+ENTRY_POINT:
         CALL    LoadFAT
         MOV     BX, LOAD_ADDR_ROOTDIR
         MOV     CX, WORD [RootEntryCnt]
@@ -62,14 +62,7 @@ LOAD_OK:
         MOV     DS, AX
         MOV     ES, AX
 
-putloop:
-        LODSB
-        TEST    AL, AL
-        JE      fin
-        MOV     AH, 0x0E
-        MOV     BX, 15
-        INT     0x10
-        JMP     putloop
+        CALL    PutString
 fin:
         HLT
         JMP     fin
@@ -191,6 +184,24 @@ FindRootDirectoryEntry:
         RET
 FOUND_FILE:
         POP     CX
+        RET
+
+;;----------------------------------------------------------------
+;;;     画面に文字列を表示する。
+;;
+;;
+PutString:
+        PUSH    BX
+PUT_CHAR_LOOP:
+        LODSB
+        TEST    AL, AL
+        JE      PUT_CHAR_FIN
+        MOV     AH, 0x0E
+        MOV     BX, 15
+        INT     0x10
+        JMP     PUT_CHAR_LOOP
+PUT_CHAR_FIN:
+        POP     BX
         RET
 
 ;;----------------------------------------------------------------
