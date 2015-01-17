@@ -110,8 +110,7 @@ ReadSectors:
         CALL    ReadOneSector
         ADD     BX, WORD [BytesPerSec]
         INC     SI
-        DEC     CX
-        JNZ     ReadSectors
+        LOOP    ReadSectors
         RET
 
 ;;----------------------------------------------------------------
@@ -180,8 +179,7 @@ FindRootDirectoryEntry:
         JCXZ    FOUND_FILE
         ADD     BX, 0x0020
         POP     CX
-        DEC     CX
-        JNZ     FindRootDirectoryEntry
+        LOOP    FindRootDirectoryEntry
         XOR     BX, BX          ;   エラー。
         RET
 FOUND_FILE:
