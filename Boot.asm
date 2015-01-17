@@ -12,8 +12,7 @@ ORG     0x7C00
 LOAD_ADDR_FAT       EQU     0x7E00
 LOAD_ADDR_ROOTDIR   EQU     0xA200
 
-ClusterID           EQU     0x0FF0
-DataSector          EQU     0x0FF2
+DataSector          EQU     0x0F00
 
 ;;----------------------------------------------------------------
 ;;
@@ -66,17 +65,11 @@ ENTRY_POINT:
         TEST    SI, SI
         JZ      LOAD_FAILURE
 
-        PUSH    DS
-        PUSH    ES
-        MOV     AX, 0x0100
-        XOR     BX, BX
-        MOV     DS, AX
-        MOV     ES, AX
+        MOV     BX, 0x1000
+        PUSH    BX
         CALL    ReadFile
-        XOR     SI, SI
+        POP     SI
         CALL    PutString
-        POP     ES
-        POP     DS
 
         POP     SI
         PUSH    MSG_LOADING_OK
