@@ -84,25 +84,6 @@ READ_FAT_LOOP:
         RET
 
 ;;----------------------------------------------------------------
-;;;   ディスクアクセス時のアドレスを変換する。
-;;
-;;  @param [in] AX   LBA アドレスを指定。
-;;  @param[out] CH   シリンダ番号。
-;;  @param[out] CL   セクタ番号。
-;;  @param[out] DH   ヘッド番号。
-;;
-ConvertLBAtoCHS:
-        XOR     DX, DX
-        DIV     WORD [SectorPerTrack]
-        INC     DL
-        MOV     CL, DL          ;   セクタ番号
-        XOR     DX, DX
-        DIV     WORD [NumberOfHeads]
-        MOV     DH, DL          ;   ヘッド番号。
-        MOV     CH, AL          ;   シリンダ番号
-        RET
-
-;;----------------------------------------------------------------
 ;;;   セクタを読み込む。
 ;;
 ;;  @param [in]     SI      読み込むセクタを、LBA で指定する。
@@ -130,6 +111,25 @@ READ_SUCCESS:
         POP     SI
         POP     CX
         POP     BX
+        RET
+
+;;----------------------------------------------------------------
+;;;   ディスクアクセス時のアドレスを変換する。
+;;
+;;  @param [in] AX   LBA アドレスを指定。
+;;  @param[out] CH   シリンダ番号。
+;;  @param[out] CL   セクタ番号。
+;;  @param[out] DH   ヘッド番号。
+;;
+ConvertLBAtoCHS:
+        XOR     DX, DX
+        DIV     WORD [SectorPerTrack]
+        INC     DL
+        MOV     CL, DL          ;   セクタ番号
+        XOR     DX, DX
+        DIV     WORD [NumberOfHeads]
+        MOV     DH, DL          ;   ヘッド番号。
+        MOV     CH, AL          ;   シリンダ番号
         RET
 
 ;;----------------------------------------------------------------
