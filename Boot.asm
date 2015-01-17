@@ -76,13 +76,20 @@ LOAD_FAT:
         MOV     SI, WORD [RsvdSecCount]
         MOV     BX, 0x7E00
         CALL    ReadSectors
+LOAD_ROOT_DIR_ENTRY:
+        MOV     AX, 0x0020
+        MUL     WORD [RootEntryCnt]
+        ADD     AX, WORD [BytesPerSec]
+        DEC     AX
+        DIV     WORD [BytesPerSec]
+        CALL    ReadSectors
         RET
 
 ;;----------------------------------------------------------------
 ;;;   セクタを読み込む。
 ;;
-;;  @param [in]     SI      先頭セクタ番号を、LBA で指定する。
-;;  @param [in]     CX      読み込むセクタ数。
+;;  @param [in,out] SI      先頭セクタ番号を、LBA で指定する。
+;;  @param [in,out] CX      読み込むセクタ数。
 ;;  @param    [out] ES:BX   読み込んだデータを格納するアドレス。
 ;;
 ReadSectors:
