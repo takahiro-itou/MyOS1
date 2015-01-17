@@ -46,6 +46,7 @@ FileSystem      DB      "FAT12   "
 ;;
 ENTRY_POINT:
         CALL    LoadFAT
+
         MOV     BX, LOAD_ADDR_ROOTDIR
         MOV     CX, WORD [RootEntryCnt]
         MOV     SI, IplImageName
@@ -75,7 +76,7 @@ MSG_FILE_NOT_FOUND:
         DB      0
 
 IplImageName:
-        DB      "IPL     BIN"
+        DB      "IPL     BIN", 0
 
 ;;----------------------------------------------------------------
 ;;
@@ -128,7 +129,6 @@ READ_RETRY_LOOP:
         CALL    ConvertLBAtoCHS
         MOV     AX, 0x0201
         MOV     DL, BYTE [DriveNumber]
-        MOV     BX, 0x7E00
         INT     0x13
         JNC     READ_SUCCESS
         XOR     AX, AX
