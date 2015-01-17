@@ -76,13 +76,6 @@ LOAD_FAT:
         MOV     SI, WORD [RsvdSecCount]
         MOV     BX, 0x7E00
         CALL    ReadSectors
-
-READ_FAT_LOOP:
-        CALL    ReadSector
-        ADD     BX, WORD [BytesPerSec]
-        INC     AX
-        DEC     CX
-        JNZ     READ_FAT_LOOP
         RET
 
 ;;----------------------------------------------------------------
