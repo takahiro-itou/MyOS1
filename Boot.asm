@@ -203,12 +203,21 @@ PUT_CHAR_LOOP:
         LODSB
         TEST    AL, AL
         JE      PUT_CHAR_FIN
-        MOV     AH, 0x0E
-        MOV     BX, 15
-        INT     0x10
+        CALL    PutChar
         JMP     PUT_CHAR_LOOP
 PUT_CHAR_FIN:
         POP     BX
+        RET
+
+;;----------------------------------------------------------------
+;;;     画面に壱文字を表示する。
+;;
+;;  @param [in] AL
+;;
+PutChar:
+        MOV     AH, 0x0E
+        MOV     BX, 15
+        INT     0x10
         RET
 
 ;;----------------------------------------------------------------
