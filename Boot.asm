@@ -231,9 +231,9 @@ ReadFile:
         MOV     DS, AX
 
         MOV     AX, WORD [SI + 0x001A] ;   先頭クラスタ番号。
-        MOV     [ClusterID], AX
 READ_FILE_LOOP:
-        MOV     AX, WORD [ClusterID]
+        PUSH    AX              ;   この値（クラスタ番号）は、
+                                ;   後で使うので保存しておく。
         SUB     AX, 0x0002
         XOR     CX, CX
         MOV     CL, BYTE [SecPerCluter]
@@ -244,7 +244,7 @@ READ_FILE_LOOP:
                                 ;   保存先 BX は自動更新。
 
         ;;   次のクラスタを調べる。
-        MOV     AX, WORD [ClusterID]
+        POP     AX
         MOV     SI, AX
         SHR     SI, 1
         ADD     SI, AX
@@ -257,7 +257,6 @@ CLUSTER_ODD:
         SHR     AX, 4
 CLUSTER_EVEN:
         AND     AX, 0x0FFF
-        MOV     WORD [ClusterID], AX
         CMP     AX, 0xFF0
         JB      READ_FILE_LOOP
 READ_FILE_FINISH:
