@@ -13,6 +13,7 @@ LOAD_ADDR_FAT       EQU     0x7E00
 LOAD_ADDR_ROOTDIR   EQU     0xA200
 
 ClusterID           EQU     0x0FF0
+DataSector          EQU     0x0FF2
 
 ;;----------------------------------------------------------------
 ;;
@@ -74,7 +75,7 @@ MSG_LOADING_OK:
         DB      "Loading OK."
         DB      0
 MSG_FILE_NOT_FOUND:
-        DB      "File Not Found."
+        DB      "IPL Not Found."
         DB      0
 
 IplImageName:
@@ -99,6 +100,8 @@ LOAD_ROOT_DIR_ENTRY:
         MOV     CX, AX          ;   読み込むセクタ数。
         MOV     BX, LOAD_ADDR_ROOTDIR
         CALL    ReadSectors
+
+        MOV     WORD [DataSector], SI
         RET
 
 ;;----------------------------------------------------------------
@@ -191,6 +194,58 @@ FindRootDirectoryEntry:
 
 FOUND_FILE:
         POP     CX
+        RET
+
+;;----------------------------------------------------------------
+;;;   ファイルの内容をメモリに転送する。
+;;
+;;   @param [in] BX      読み込むファイルの情報。
+;;       ルートディレクトリ領域内から探しておく。
+;;   @param[out] ES:DI   読み込んだデータの格納先。
+;;
+ReadFile:
+        PUSH    DS
+        PUSH    DI
+        PUSH    BX
+
+        XOR     AX, AX
+        MOV     DS, AX
+
+        MOV     AX, WORD [BX + 0x001A] ;   先頭クラスタ番号。
+        MOV     [ClusterID], AX
+        MOV     BX, DI
+READ_FILE_LOOP:
+        MOV     AX, WORD [ClusterID]
+        SUB     AX, 0x0002
+        XOR     CX, CX
+        MOV     CL, BYTE [SecPerCluter]
+        MUL     AX
+        ADD     AX, WORD [DataSector]
+        MOV     SI, AX
+        CALL    ReadSectors     ;   セクタの内容を読み込む。
+                                ;   データの保存先は自動更新。
+
+        ;;   次のクラスタを調べる。
+        MOV     AX, WORD [ClusterID]
+        MOV     DI, AX
+        SHR     DI, 1
+        ADD     DI, AX
+        ADD     DI, LOAD_ADDR_FAT
+
+        MOV     DX, WORD [DI]
+        TEST    AX, 0x0001
+        JZ      CLUSTER_EVEN
+CLUSTER_ODD:
+        SHR     DX, 4
+CLUSTER_EVEN:
+        AND     DX, 0x0FFF
+        MOV     WORD [ClusterID], DX
+        CMP     DX, 0xFF0
+        JB      READ_FILE_LOOP
+READ_FILE_FINISH:
+        POP     BX
+        POP     DI
+        POP     DS
         RET
 
 ;;----------------------------------------------------------------
