@@ -224,7 +224,7 @@ FOUND_FILE:
 ;;
 ReadFile:
         PUSH    DS
-        PUSH    DI
+        PUSH    SI
         PUSH    BX
 
         XOR     AX, AX
@@ -241,28 +241,28 @@ READ_FILE_LOOP:
         ADD     AX, WORD [DataSector]
         MOV     SI, AX
         CALL    ReadSectors     ;   セクタの内容を読み込む。
-                                ;   データの保存先は自動更新。
+                                ;   保存先 BX は自動更新。
 
         ;;   次のクラスタを調べる。
         MOV     AX, WORD [ClusterID]
-        MOV     DI, AX
-        SHR     DI, 1
-        ADD     DI, AX
-        ADD     DI, LOAD_ADDR_FAT
+        MOV     SI, AX
+        SHR     SI, 1
+        ADD     SI, AX
+        ADD     SI, LOAD_ADDR_FAT
 
-        MOV     DX, WORD [DI]
         TEST    AX, 0x0001
+        MOV     AX, WORD [SI]
         JZ      CLUSTER_EVEN
 CLUSTER_ODD:
-        SHR     DX, 4
+        SHR     AX, 4
 CLUSTER_EVEN:
-        AND     DX, 0x0FFF
-        MOV     WORD [ClusterID], DX
-        CMP     DX, 0xFF0
+        AND     AX, 0x0FFF
+        MOV     WORD [ClusterID], AX
+        CMP     AX, 0xFF0
         JB      READ_FILE_LOOP
 READ_FILE_FINISH:
         POP     BX
-        POP     DI
+        POP     SI
         POP     DS
         RET
 
