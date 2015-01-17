@@ -12,6 +12,8 @@ ORG     0x7C00
 LOAD_ADDR_FAT       EQU     0x7E00
 LOAD_ADDR_ROOTDIR   EQU     0xA200
 
+ClusterID           EQU     0x0FF0
+
 ;;----------------------------------------------------------------
 ;;
 ;;      BPB (Bios Parameter Block)
@@ -107,11 +109,15 @@ LOAD_ROOT_DIR_ENTRY:
 ;;  @param    [out] ES:BX   読み込んだデータを格納するアドレス。
 ;;
 ReadSectors:
+        PUSH    DI
+READ_SECTORS_LOOP:
         MOV     DI, 0x0005
         CALL    ReadOneSector
         ADD     BX, WORD [BytesPerSec]
         INC     SI
-        LOOP    ReadSectors
+        LOOP    READ_SECTORS_LOOP
+
+        POP     DI
         RET
 
 ;;----------------------------------------------------------------
@@ -182,6 +188,7 @@ FindRootDirectoryEntry:
         LOOP    FindRootDirectoryEntry
         XOR     BX, BX          ;   エラー。
         RET
+
 FOUND_FILE:
         POP     CX
         RET
