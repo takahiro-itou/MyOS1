@@ -51,12 +51,17 @@ entrypoint:
         MOV     SI, IplImageName
         CALL    FindRootDirectoryEntry
 
+        MOV     SI, MSG_LOADING_OK
+        TEST    BX, BX
+        JNZ     LOAD_OK
+        MOV     SI, MSG_FILE_NOT_FOUND
+LOAD_OK:
         XOR     AX, AX
         MOV     SS, AX
         MOV     SP, 0x7C00
         MOV     DS, AX
         MOV     ES, AX
-        MOV     SI, msg
+
 putloop:
         LODSB
         TEST    AL, AL
@@ -69,11 +74,13 @@ fin:
         HLT
         JMP     fin
 
-msg:
-        DB      0x0a, 0x0a
+MSG_LOADING_OK:
         DB      "Loading OK."
-        DB      0x0a, 0x0a
         DB      0
+MSG_FILE_NOT_FOUND:
+        DB      "File Not Found."
+        DB      0
+
 IplImageName:
         DB      "IPL     BIN"
 
