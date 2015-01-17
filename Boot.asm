@@ -64,6 +64,19 @@ ENTRY_POINT:
         MOV     SI, MSG_FILE_NOT_FOUND
         TEST    BX, BX
         JZ      LOAD_FAILURE
+
+        PUSH    DS
+        PUSH    ES
+        MOV     AX, 0x0100
+        XOR     DI, DI
+        MOV     DS, AX
+        MOV     ES, AX
+        CALL    ReadFile
+        XOR     SI, SI
+        CALL    PutString
+        POP     ES
+        POP     DS
+
         MOV     SI, MSG_LOADING_OK
 LOAD_FAILURE:
         CALL    PutString
