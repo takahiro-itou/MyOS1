@@ -9,6 +9,9 @@
 [BITS 16]
 ORG     0x7C00
 
+LOAD_ADDR_FAT       EQU     0x7E00
+LOAD_ADDR_ROOTDIR   EQU     0xA200
+
 ;;----------------------------------------------------------------
 ;;
 ;;      BPB (Bios Parameter Block)
@@ -74,7 +77,7 @@ LOAD_FAT:
         MUL     BYTE [NumberOfFATs]
         MOV     CX, AX          ;   読み込むセクタ数。
         MOV     SI, WORD [RsvdSecCount]
-        MOV     BX, 0x7E00
+        MOV     BX, [LOAD_ADDR_FAT]
         CALL    ReadSectors
 LOAD_ROOT_DIR_ENTRY:
         MOV     AX, 0x0020
@@ -82,6 +85,7 @@ LOAD_ROOT_DIR_ENTRY:
         ADD     AX, WORD [BytesPerSec]
         DEC     AX
         DIV     WORD [BytesPerSec]
+        MOV     BX, [LOAD_ADDR_ROOTDIR]
         CALL    ReadSectors
         RET
 
