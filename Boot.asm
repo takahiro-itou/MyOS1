@@ -67,6 +67,23 @@ msg:
         DB      0
 
 ;;----------------------------------------------------------------
+;;
+;;
+LOAD_FAT:
+        MOV     AX, WORD [SizeOfFAT]
+        MUL     BYTE [NumberOfFATs]
+        MOV     CX, AX          ;   読み込むセクタ数。
+        MOV     AX, WORD [RsvdSecCount]
+        MOV     BX, 0x7E00
+READ_FAT_LOOP:
+        CALL    ReadSector
+        ADD     BX, WORD [BytesPerSec]
+        INC     AX
+        DEC     CX
+        JNZ     READ_FAT_LOOP
+        RET
+
+;;----------------------------------------------------------------
 ;;;   ディスクアクセス時のアドレスを変換する。
 ;;
 ;;  @param [in] AX   LBA アドレスを指定。
