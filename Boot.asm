@@ -69,10 +69,9 @@ ENTRY_POINT:
         PUSH    DS
         PUSH    ES
         MOV     AX, 0x0100
-        XOR     DI, DI
+        XOR     BX, BX
         MOV     DS, AX
         MOV     ES, AX
-        MOV     BX, SI
         CALL    ReadFile
         XOR     SI, SI
         CALL    PutString
@@ -219,9 +218,9 @@ FOUND_FILE:
 ;;----------------------------------------------------------------
 ;;;   ファイルの内容をメモリに転送する。
 ;;
-;;   @param [in] BX      読み込むファイルの情報。
+;;   @param [in] SI      読み込むファイルの情報。
 ;;       ルートディレクトリ領域内から探しておく。
-;;   @param[out] ES:DI   読み込んだデータの格納先。
+;;   @param[out] ES:BX   読み込んだデータの格納先。
 ;;
 ReadFile:
         PUSH    DS
@@ -231,9 +230,8 @@ ReadFile:
         XOR     AX, AX
         MOV     DS, AX
 
-        MOV     AX, WORD [BX + 0x001A] ;   先頭クラスタ番号。
+        MOV     AX, WORD [SI + 0x001A] ;   先頭クラスタ番号。
         MOV     [ClusterID], AX
-        MOV     BX, DI
 READ_FILE_LOOP:
         MOV     AX, WORD [ClusterID]
         SUB     AX, 0x0002
