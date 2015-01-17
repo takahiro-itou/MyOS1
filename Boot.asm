@@ -45,6 +45,12 @@ FileSystem      DB      "FAT12   "
 ;;      Entry Point.
 ;;
 ENTRY_POINT:
+        XOR     AX, AX
+        MOV     SS, AX
+        MOV     SP, 0x7C00
+        MOV     DS, AX
+        MOV     ES, AX
+
         CALL    LoadFAT
 
         MOV     BX, LOAD_ADDR_ROOTDIR
@@ -52,21 +58,15 @@ ENTRY_POINT:
         MOV     SI, IplImageName
         CALL    FindRootDirectoryEntry
 
-        MOV     SI, MSG_LOADING_OK
-        TEST    BX, BX
-        JNZ     LOAD_OK
         MOV     SI, MSG_FILE_NOT_FOUND
-LOAD_OK:
-        XOR     AX, AX
-        MOV     SS, AX
-        MOV     SP, 0x7C00
-        MOV     DS, AX
-        MOV     ES, AX
-
+        TEST    BX, BX
+        JZ      LOAD_FAILURE
+        MOV     SI, MSG_LOADING_OK
+LOAD_FAILURE:
         CALL    PutString
-fin:
+HALT_LOOP:
         HLT
-        JMP     fin
+        JMP     HALT_LOOP
 
 MSG_LOADING_OK:
         DB      "Loading OK."
