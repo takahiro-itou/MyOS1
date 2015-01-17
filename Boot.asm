@@ -1,4 +1,4 @@
-;;  -*-  coding: utf-8  -*-
+        ;;  -*-  coding: utf-8  -*-
 
 ;;========================================================================
 ;;
@@ -45,7 +45,11 @@ FileSystem      DB      "FAT12   "
 ;;      Entry Point.
 ;;
 entrypoint:
-        CALL    LOAD_FAT
+        CALL    LoadFAT
+        MOV     BX, LOAD_ADDR_ROOTDIR
+        MOV     CX, WORD [RootEntryCnt]
+        MOV     SI, IplImageName
+        CALL    FindRootDirectoryEntry
 
         XOR     AX, AX
         MOV     SS, AX
@@ -70,11 +74,13 @@ msg:
         DB      "Loading OK."
         DB      0x0a, 0x0a
         DB      0
+IplImageName:
+        DB      "IPL     BIN"
 
 ;;----------------------------------------------------------------
 ;;
 ;;
-LOAD_FAT:
+LoadFAT:
         MOV     AX, WORD [SizeOfFAT]
         MUL     BYTE [NumberOfFATs]
         MOV     CX, AX          ;   読み込むセクタ数。
@@ -153,6 +159,33 @@ ConvertLBAtoCHS:
         DIV     WORD [NumberOfHeads]
         MOV     DH, DL          ;   ヘッド番号。
         MOV     CH, AL          ;   シリンダ番号
+        RET
+
+;;----------------------------------------------------------------
+;;;   ルートディレクトリ領域を検索する。
+;;
+;;  @param [in]     SI   検索するファイル名。
+;;  @param [in]     CX   領域内のエントリ数。
+;;  @param [in,out] BX   領域の先頭アドレス。
+;;
+FindRootDirectoryEntry:
+        PUSH    CX
+        MOV     DI, BX
+        MOV     CX, 11
+        PUSH    DI
+        PUSH    SI
+        REPE    CMPSB
+        POP     SI
+        POP     DI
+        JCXZ    FOUND_FILE
+        ADD     BX, 0x0020
+        POP     CX
+        DEC     CX
+        JNZ     FindRootDirectoryEntry
+        XOR     BX, BX          ;   エラー。
+        RET
+FOUND_FILE:
+        POP     CX
         RET
 
 ;;----------------------------------------------------------------
