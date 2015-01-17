@@ -45,6 +45,8 @@ FileSystem      DB      "FAT12   "
 ;;      Entry Point.
 ;;
 entrypoint:
+        CALL    LOAD_FAT
+
         XOR     AX, AX
         MOV     SS, AX
         MOV     SP, 0x7C00
@@ -65,7 +67,7 @@ fin:
 
 msg:
         DB      0x0a, 0x0a
-        DB      "Hello, World"
+        DB      "Loading OK."
         DB      0x0a, 0x0a
         DB      0
 
@@ -77,7 +79,7 @@ LOAD_FAT:
         MUL     BYTE [NumberOfFATs]
         MOV     CX, AX          ;   読み込むセクタ数。
         MOV     SI, WORD [RsvdSecCount]
-        MOV     BX, [LOAD_ADDR_FAT]
+        MOV     BX, LOAD_ADDR_FAT
         CALL    ReadSectors
 LOAD_ROOT_DIR_ENTRY:
         MOV     AX, 0x0020
@@ -85,7 +87,8 @@ LOAD_ROOT_DIR_ENTRY:
         ADD     AX, WORD [BytesPerSec]
         DEC     AX
         DIV     WORD [BytesPerSec]
-        MOV     BX, [LOAD_ADDR_ROOTDIR]
+        MOV     CX, AX          ;   読み込むセクタ数。
+        MOV     BX, LOAD_ADDR_ROOTDIR
         CALL    ReadSectors
         RET
 
@@ -115,12 +118,12 @@ ReadSectors:
 ReadOneSector:
         PUSH    BX
         PUSH    CX
-        PUSH    SI
 READ_RETRY_LOOP:
         MOV     AX, SI
         CALL    ConvertLBAtoCHS
         MOV     AX, 0x0201
         MOV     DL, BYTE [DriveNumber]
+        MOV     BX, 0x7E00
         INT     0x13
         JNC     READ_SUCCESS
         XOR     AX, AX
@@ -129,7 +132,6 @@ READ_RETRY_LOOP:
         DEC     DI
         JNZ     READ_RETRY_LOOP
 READ_SUCCESS:
-        POP     SI
         POP     CX
         POP     BX
         RET
