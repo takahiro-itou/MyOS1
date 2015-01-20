@@ -69,13 +69,13 @@ ENTRY_POINT:
         PUSH    BX
         CALL    ReadFile
         POP     SI
-        CALL    PutString
+        CALL    WriteString
 
         POP     SI
         PUSH    MSG_LOADING_OK
 LOAD_FAILURE:
         POP     SI
-        CALL    PutString
+        CALL    WriteString
 HALT_LOOP:
         HLT
         JMP     HALT_LOOP
@@ -259,31 +259,11 @@ READ_FILE_FINISH:
         RET
 
 ;;----------------------------------------------------------------
-;;;     画面に文字列を表示する。
 ;;
+;;      文字列表示関連。
 ;;
-PutString:
-        PUSH    BX
-PUT_CHAR_LOOP:
-        LODSB
-        TEST    AL, AL
-        JE      PUT_CHAR_FIN
-        CALL    PutChar
-        JMP     PUT_CHAR_LOOP
-PUT_CHAR_FIN:
-        POP     BX
-        RET
 
-;;----------------------------------------------------------------
-;;;     画面に壱文字を表示する。
-;;
-;;  @param [in] AL
-;;
-PutChar:
-        MOV     AH, 0x0E
-        MOV     BX, 15
-        INT     0x10
-        RET
+%include    "assembly16/WriteString.asm"
 
 ;;----------------------------------------------------------------
 ;;
