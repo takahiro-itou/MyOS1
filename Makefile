@@ -5,7 +5,9 @@ all  :  Boot.img
 
 bootsector :
 
-Boot.img  :  Boot.asm
+Boot.img  :  Boot.asm               \
+        assembly16/ReadFloppy.asm   \
+        assembly16/WriteString.asm
 	nasm  -o Boot.img  -l Boot.lst  $<
 
 install  :  Boot.img
