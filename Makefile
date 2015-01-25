@@ -5,12 +5,15 @@ all  :  Boot.img
 
 bootsector :
 
-Boot.img  :  Boot.asm
-	nasm  -o Boot.img  -l Boot.lst  $<
+Boot.img  :  \
+        assembly16/BootSector.asm   \
+        assembly16/ReadFloppy.asm   \
+        assembly16/WriteString.asm
+	nasm  -o BootSector.img  -l assembly16/BootSector.lst  $<
 
-install  :  Boot.img
-	dd if=Boot.img bs=512 count=1 of=/proc/sys/Device/ImDisk0
+install  :  BootSector.img
+	dd if=BootSector.img bs=512 count=1 of=/proc/sys/Device/ImDisk0
 
 clean    :
-	$(RM)  Boot.img  Boot.lst
+	$(RM)  BootSector.img  assembly16/Boot.lst
 
