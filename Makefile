@@ -1,19 +1,31 @@
 
-.PHONY  :  all  clean  install
+.PHONY  :  all  clean  install  \
+           InstallBootSector  InstallSystemFile
 
-all  :  Boot.img
+all  :  BootSector.img  Ipl.bin
 
 bootsector :
 
-Boot.img  :  \
+BootSector.img  :  \
         assembly16/BootSector.asm   \
         assembly16/ReadFloppy.asm   \
         assembly16/WriteString.asm
-	nasm  -o BootSector.img  -l assembly16/BootSector.lst  $<
+	nasm  -o $@  -l assembly16/BootSector.lst  $<
 
-install  :  BootSector.img
-	dd if=BootSector.img bs=512 count=1 of=/proc/sys/Device/ImDisk0
+Ipl.bin  :  \
+        Ipl.asm  \
+        assembly16/WriteString.asm
+	nasm  -o $@  -l $*.lst  $<
+
+install  :  InstallBootSector  InstallSystemFile
+
+InstallBootSector  :  BootSector.img
+	dd  if=BootSector.img bs=512 count=1 of=/proc/sys/Device/ImDisk0
+
+InstallSystemFile  :  Ipl.bin
+	cp  -pv  $^  /cygdrive/a/
 
 clean    :
 	$(RM)  BootSector.img  assembly16/Boot.lst
+	$(RM)  Ipl.bin
 

@@ -25,7 +25,7 @@ DataSector          EQU     0x0F00
 
 %include    "assembly16/Fat12Bpb.inc"
 
-        TIMES   2   DB  0
+        TIMES   0x12    DB  0
 
 ;;----------------------------------------------------------------
 ;;
@@ -38,13 +38,11 @@ ENTRY_POINT:
         MOV     DS, AX
         MOV     ES, AX
 
-        PUSH    .MSG_FILE_NOT_FOUND
-
         CALL    LoadFAT
 
         MOV     SI, LOAD_ADDR_ROOTDIR
         MOV     CX, WORD [RootEntryCnt]
-        MOV     DI, IplImageName
+        MOV     DI, .IPL_IMAGE_NAME
         CALL    FindRootDirectoryEntry
 
         TEST    SI, SI
@@ -53,26 +51,18 @@ ENTRY_POINT:
         MOV     BX, 0x1000
         PUSH    BX
         CALL    ReadFile
-        POP     SI
-        CALL    WriteString
-
-        POP     SI
-        PUSH    .MSG_LOADING_OK
+        JMP     BX
 .LOAD_FAILURE:
-        POP     SI
+        MOV     SI, .MSG_FILE_NOT_FOUND
         CALL    WriteString
 .HALT_LOOP:
         HLT
         JMP     .HALT_LOOP
 
-.MSG_LOADING_OK:
-        DB      "Loading OK."
-        DB      0
 .MSG_FILE_NOT_FOUND:
-        DB      "IPL Not Found."
-        DB      0
+        DB      "IPL Not Found.", 0
 
-IplImageName:
+.IPL_IMAGE_NAME:
         DB      "IPL     BIN", 0
 
 ;;----------------------------------------------------------------
