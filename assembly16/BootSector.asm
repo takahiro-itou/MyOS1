@@ -1,13 +1,15 @@
-        ;;  -*-  coding: utf-8  -*-
-
+;;  -*-  coding: utf-8; mode: asm  -*-  ;;
+;;======================================================================;;
+;;                                                                      ;;
+;;          BootSector.asm                                              ;;
+;;                                                                      ;;
+;;          Copyright (C), 2015-2015, Takahiro Itou                     ;;
+;;          All Rights Reserved.                                        ;;
+;;                                                                      ;;
 ;;========================================================================
-;;
-;;          Boot Sector.
-;;
-;;========================================================================
 
-[BITS 16]
-ORG     0x7C00
+        [BITS 16]
+        ORG     0x7C00
 
 LOAD_ADDR_FAT       EQU     0x7E00
 LOAD_ADDR_ROOTDIR   EQU     0xA200
@@ -36,7 +38,7 @@ ENTRY_POINT:
         MOV     DS, AX
         MOV     ES, AX
 
-        PUSH    MSG_FILE_NOT_FOUND
+        PUSH    .MSG_FILE_NOT_FOUND
 
         CALL    LoadFAT
 
@@ -46,7 +48,7 @@ ENTRY_POINT:
         CALL    FindRootDirectoryEntry
 
         TEST    SI, SI
-        JZ      LOAD_FAILURE
+        JZ      .LOAD_FAILURE
 
         MOV     BX, 0x1000
         PUSH    BX
@@ -55,18 +57,18 @@ ENTRY_POINT:
         CALL    WriteString
 
         POP     SI
-        PUSH    MSG_LOADING_OK
-LOAD_FAILURE:
+        PUSH    .MSG_LOADING_OK
+.LOAD_FAILURE:
         POP     SI
         CALL    WriteString
-HALT_LOOP:
+.HALT_LOOP:
         HLT
-        JMP     HALT_LOOP
+        JMP     .HALT_LOOP
 
-MSG_LOADING_OK:
+.MSG_LOADING_OK:
         DB      "Loading OK."
         DB      0
-MSG_FILE_NOT_FOUND:
+.MSG_FILE_NOT_FOUND:
         DB      "IPL Not Found."
         DB      0
 
@@ -76,6 +78,7 @@ IplImageName:
 ;;----------------------------------------------------------------
 ;;
 ;;
+
 LoadFAT:
         MOV     AX, WORD [SizeOfFAT]
         MUL     BYTE [NumberOfFATs]
@@ -83,7 +86,7 @@ LoadFAT:
         MOV     SI, WORD [RsvdSecCount]
         MOV     BX, LOAD_ADDR_FAT
         CALL    ReadSectors
-LOAD_ROOT_DIR_ENTRY:
+.LOAD_ROOT_DIR_ENTRY:
         MOV     AX, 0x0020
         MUL     WORD [RootEntryCnt]
         ADD     AX, WORD [BytesPerSec]
