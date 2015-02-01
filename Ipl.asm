@@ -10,6 +10,7 @@
 
         [BITS 16]
         ORG     0x1000
+        JMP     ENTRY_POINT
 
 ;;----------------------------------------------------------------
 ;;
@@ -24,10 +25,20 @@ ENTRY_POINT:
         MOV     SI,  MSG_START_LOADING
         CALL    WriteString
 
+        CALL    EnableA20
+        MOV     SI,  MSG_ENABLE_A20
+        CALL    WriteString
+
 .HALT_LOOP:
         HLT
         JMP     .HALT_LOOP
 
+
+;;----------------------------------------------------------------
+;;
+;;      プロテクトモード関連。
+;;
+%include    "assembly16/EnableA20.asm"
 
 ;;----------------------------------------------------------------
 ;;
@@ -42,5 +53,7 @@ ENTRY_POINT:
 ;;
 
 MSG_START_LOADING:
-        DB      "Loading Operating System...", 0
+        DB      "Loading Operating System ...", 0x0d, 0x0a, 0
 
+MSG_ENABLE_A20:
+        DB      "Enabled A-20.", 0x0d. 0x0a, 0

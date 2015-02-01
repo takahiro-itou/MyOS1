@@ -24,8 +24,9 @@ $(BOOTSEC_IMG)  :  \
 
 $(IPL_BIN)  :  \
         Ipl.asm  \
+        assembly16/EnableA20.asm    \
         assembly16/WriteString.asm
-	$(ASM)  -o $@  -l $*.lst  $<
+	$(ASM)  -o $@  -l assembly16/Ipl.lst  $<
 
 install  :  InstallBootSector  InstallSystemFile
 
