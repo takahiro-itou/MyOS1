@@ -63,7 +63,7 @@ ENTRY_POINT:
         DB      "IPL Not Found.", 0
 
 .IPL_IMAGE_NAME:
-        DB      "IPL     BIN", 0
+        DB      "IPLF12  BIN", 0
 
 ;;----------------------------------------------------------------
 ;;

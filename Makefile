@@ -1,31 +1,42 @@
 
+BOOTSEC_IMG  =  BootSector.img
+IPL_BIN      =  IplF12.bin
+
+SYSDEV_FLOPPY  =  /proc/sys/Device/ImDisk0
+CPDEST_FLOPPY  =  /cygdrive/a
+
+ASM  =  nasm
+CP   =  cp
+DD   =  dd
+
+
 .PHONY  :  all  clean  install  \
            InstallBootSector  InstallSystemFile
 
-all  :  BootSector.img  Ipl.bin
 
-bootsector :
+all  :  $(BOOTSEC_IMG)  $(IPL_BIN)
 
-BootSector.img  :  \
+$(BOOTSEC_IMG)  :  \
         assembly16/BootSector.asm   \
         assembly16/ReadFloppy.asm   \
         assembly16/WriteString.asm
-	nasm  -o $@  -l assembly16/BootSector.lst  $<
+	$(ASM)  -o $@  -l assembly16/BootSector.lst  $<
 
-Ipl.bin  :  \
+$(IPL_BIN)  :  \
         Ipl.asm  \
+        assembly16/EnableA20.asm    \
         assembly16/WriteString.asm
-	nasm  -o $@  -l $*.lst  $<
+	$(ASM)  -o $@  -l assembly16/Ipl.lst  $<
 
 install  :  InstallBootSector  InstallSystemFile
 
-InstallBootSector  :  BootSector.img
-	dd  if=BootSector.img bs=512 count=1 of=/proc/sys/Device/ImDisk0
+InstallBootSector  :  $(BOOTSEC_IMG)
+	$(DD)  if=$(BOOTSEC_IMG)  bs=512  count=1  of=$(SYSDEV_FLOPPY)
 
-InstallSystemFile  :  Ipl.bin
-	cp  -pv  $^  /cygdrive/a/
+InstallSystemFile  :  $(IPL_BIN)
+	$(CP)  -pv  $^  $(CPDEST_FLOPPY)/
 
 clean    :
-	$(RM)  BootSector.img  assembly16/Boot.lst
-	$(RM)  Ipl.bin
+	$(RM)  $(BOOTSEC_IMG)  assembly16/Boot.lst
+	$(RM)  $(IPL_BIN)
 
