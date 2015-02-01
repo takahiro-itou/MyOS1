@@ -29,6 +29,10 @@ ENTRY_POINT:
         MOV     SI,  MSG_ENABLE_A20
         CALL    WriteString
 
+        CALL    SetupGDT
+        MOV     SI,  MSG_SETUP_GDT
+        CALL    WriteString
+
 .HALT_LOOP:
         HLT
         JMP     .HALT_LOOP
@@ -38,7 +42,9 @@ ENTRY_POINT:
 ;;
 ;;      プロテクトモード関連。
 ;;
+
 %include    "assembly16/EnableA20.asm"
+%include    "assembly16/SetupGdt.asm"
 
 ;;----------------------------------------------------------------
 ;;
@@ -56,4 +62,7 @@ MSG_START_LOADING:
         DB      "Loading Operating System ...", 0x0d, 0x0a, 0
 
 MSG_ENABLE_A20:
-        DB      "Enabled A-20.", 0x0d. 0x0a, 0
+        DB      "Enabled A-20.", 0x0d, 0x0a, 0
+
+MSG_SETUP_GDT:
+        DB      "Maked Global Descriptor Table.", 0x0d, 0x0a, 0
