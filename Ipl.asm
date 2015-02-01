@@ -9,8 +9,13 @@
 ;;========================================================================
 
         [BITS 16]
+
         ORG     0x1000
         JMP     ENTRY_POINT
+
+NULL_SEG    EQU         0x0000
+CODE_SEG    EQU         0x0008
+DATA_SEG    EQU         0x0010
 
 ;;----------------------------------------------------------------
 ;;
@@ -32,6 +37,23 @@ ENTRY_POINT:
         CALL    SetupGDT
         MOV     SI,  MSG_SETUP_GDT
         CALL    WriteString
+
+        MOV     SI,  MSG_PROTECT32_START
+        CALL    WriteString
+
+        CLI
+        MOV     EAX,  CR0
+        OR      EAX,  0x00000001
+        MOV     CR0,  EAX
+        JMP     CODE_SEG : .PROTECT32_START
+
+.PROTECT32_START:
+        MOV     AX,  DATA_SEG
+        MOV     SS,  AX
+        MOV     ES,  AX
+        MOV     FS,  AX
+        MOV     GS,  AX
+        MOV     DS,  AX
 
 .HALT_LOOP:
         HLT
@@ -66,3 +88,6 @@ MSG_ENABLE_A20:
 
 MSG_SETUP_GDT:
         DB      "Maked Global Descriptor Table.", 0x0d, 0x0a, 0
+
+MSG_PROTECT32_START:
+        DB      "Start 32bit Protect Mode...", 0x0d, 0x0a, 0
