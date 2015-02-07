@@ -60,5 +60,7 @@ $(BOOT_SECTOR_IMG)  :  $(BOOT_SECTOR_IMG:%.img=%.o)
 ##
 
 $(BOOT_SECTOR_IMG:%.img=%.o)  :  \
-        Fat12Bpb.inc  WriteString.s
+        Fat12Bpb.inc  ReadFat12.s  ReadFloppy.s  WriteString.s  \
+        Binary.ls
+
 
