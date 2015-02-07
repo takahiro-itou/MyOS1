@@ -42,8 +42,29 @@ ENTRY_POINT:
         MOV     %AX,        %DS
         MOV     %AX,        %ES
 
-        CALL    LoadFAT
+        /*  ファイルアロケーションテーブルを読み込み。  */
+        MOVW    (BPB_SizeOfFAT),        %AX
+        MULB    (BPB_NumberOfFATs)
+        MOV     %AX,    %CX     /*  読み込むセクタ数。  */
+        MOVW    (BPB_RsvdSectorCount),  %SI
+        MOV     $LOAD_ADDR_FAT,         %BX
+        CALL    ReadSectors
 
+        MOV     $0x0020,                %AX
+        MULW    (BPB_RootEntryCount)
+        ADDW    (BPB_BytesPerSector),   %AX
+        DEC     %AX
+        DIVW    (BPB_BytesPerSector)
+        MOV     %AX,    %CX     /*  読み込むセクタ数。  */
+        MOV     $LOAD_ADDR_ROOTDIR,     %BX
+        CALL    ReadSectors
+
+        /*  この時点で SI レジスタに、          **
+        **  データ領域の先頭セクタ番号が入る。  **
+        **  後で使うので、保存しておく。        */
+        MOVW    %SI,    (DataSector)
+
+        /*  ファイルシステムの解析。    */
         MOV     $LOAD_ADDR_ROOTDIR,     %SI
         MOVW    (BPB_RootEntryCount),   %CX
         MOV     $.IPL_IMAGE_NAME,       %DI
@@ -67,26 +88,6 @@ ENTRY_POINT:
         .STRING     "IPL Not Found."
 .IPL_IMAGE_NAME:
         .STRING     "IPLF12  BIN"
-
-LoadFAT:
-        MOVW    (BPB_SizeOfFAT),        %AX
-        MULB    (BPB_NumberOfFATs)
-        MOV     %AX,    %CX     /*  読み込むセクタ数。  */
-        MOVW    (BPB_RsvdSectorCount),  %SI
-        MOV     $LOAD_ADDR_FAT,         %BX
-        CALL    ReadSectors
-
-        MOV     $0x0020,                %AX
-        MULW    (BPB_RootEntryCount)
-        ADDW    (BPB_BytesPerSector),   %AX
-        DEC     %AX
-        DIVW    (BPB_BytesPerSector)
-        MOV     %AX,    %CX     /*  読み込むセクタ数。  */
-        MOV     $LOAD_ADDR_ROOTDIR,     %BX
-        CALL    ReadSectors
-
-        MOVW    %SI,    (DataSector)
-        RET
 
 //----------------------------------------------------------------
 //
