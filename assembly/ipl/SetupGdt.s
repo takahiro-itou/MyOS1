@@ -12,8 +12,6 @@
 
         .global     _setupGDT
 
-.equ    NumberOfGDTs     ,  3
-
 //========================================================================
 //
 //      テーブルを設定するマクロ。
@@ -33,6 +31,10 @@
         SET_GDT_B5      \flags,  \type      /*  Flags & Type.       */
         SET_GDT_B6      \flags,  \limit     /*  Flags & Limit High  */
         .BYTE   ((\base  >> 24) & 0xFF)     /*  Base Address High   */
+.endm
+
+.macro  GDT_COMBINE_FLAGS   var,  gran, db, x64, avl, present, dpl, sys
+        .equ    \var,    ((\gran << 15)) | ((\db << 14)) | ((\x64 << 13)) | ((\avl << 12)) | ((\present << 7)) | ((\dpl << 5)) | ((\sys << 4))
 .endm
 
 //========================================================================
@@ -56,14 +58,20 @@ _setupGDT:
 
 .section    .gdt
 
+        /**         FLAGS:                     G, DB, 64, AV, P, LV, S */
+        GDT_COMBINE_FLAGS   GDT_KERNEL_32 ,    1,  1,  0,  0, 1, 00, 1
+        GDT_COMBINE_FLAGS   GDT_KERNEL_64 ,    1,  0,  1,  0, 1, 00, 1
+
+.equ    GDT_DS   ,  0x02
+.equ    GDT_CS   ,  0x0A
 
 GDT_POINT:
-        .WORD   NumberOfGDTs * 8
+        .WORD   .GDT_END - .GDT_ENTRY
         .INT    .GDT_ENTRY
 
         .align  32
-.GDT_ENTRY:
 
+.GDT_ENTRY:
         //  Null Descriptor.
         .WORD   0x0000          /*  Limit Low           */
         .WORD   0x0000          /*  Base Address Low    */
@@ -72,6 +80,10 @@ GDT_POINT:
         .BYTE   0x00            /*  Flags & Limit High  */
         .BYTE   0x00            /*  Base Address High   */
 
-        //  Code Descriptor.
-        SET_GDT_ENTRY   0xC090, 0x0A, 0x00000000, 0xFFFFFFFF
-        SET_GDT_ENTRY   0xC090, 0x02, 0x00000000, 0xFFFFFFFF
+        //  Reserved.   //
+        .QUAD   0
+        SET_GDT_ENTRY   GDT_KERNEL_32,  GDT_CS, 0x00000000, 0xFFFFFFFF
+        SET_GDT_ENTRY   GDT_KERNEL_32,  GDT_DS, 0x00000000, 0xFFFFFFFF
+        SET_GDT_ENTRY   GDT_KERNEL_64,  GDT_CS, 0x00000000, 0xFFFFFFFF
+        SET_GDT_ENTRY   GDT_KERNEL_64,  GDT_DS, 0x00000000, 0xFFFFFFFF
+.GDT_END:
