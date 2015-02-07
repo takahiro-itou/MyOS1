@@ -16,8 +16,6 @@
 .equ    LOAD_ADDR_FAT        ,  0x7E00
 .equ    LOAD_ADDR_ROOTDIR    ,  0xA200
 
-.equ    DataSector           ,  0x0F00
-
 //----------------------------------------------------------------
 //
 //      BPB (Bios Parameter Block).
@@ -62,7 +60,7 @@ ENTRY_POINT:
         /*  この時点で SI レジスタに、          **
         **  データ領域の先頭セクタ番号が入る。  **
         **  後で使うので、保存しておく。        */
-        MOVW    %SI,    (DataSector)
+        MOVW    %SI,        %BP
 
         /*  ファイルシステムの解析。    */
         MOV     $LOAD_ADDR_ROOTDIR,     %SI
@@ -73,7 +71,6 @@ ENTRY_POINT:
         JZ      .LOAD_FAILURE
 
         MOV     $0x1000,    %BX
-        PUSH    %BX
         CALL    ReadFile
         JMP     * %BX
 

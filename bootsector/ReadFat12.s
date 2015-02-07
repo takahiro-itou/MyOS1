@@ -12,9 +12,11 @@
 //----------------------------------------------------------------
 /**   ルートディレクトリ領域内を検索する。
 **
-**  @param [in] DI    検索するファイル名。
-**  @param [in] CX    領域内のエントリ数。
-**  @param [in] SI    領域の先頭アドレス。
+**  @param [in] DI      検索するファイル名。
+**  @param [in] CX      領域内のエントリ数。
+**  @param [in] SI      領域の先頭アドレス。
+**  @param [in] BP      データ領域の先頭セクタ番号。
+**  @param[out] ES:BX   読み込んだデータの格納先。
 **  @return     SI
 **      -   ファイルが見つかった場合は、
 **          そのファイルのエントリのアドレスを返す。
@@ -70,9 +72,9 @@ ReadFile:
         XOR     %CX,        %CX
         MOVB    (BPB_SectorsPerCluster),    %CL
         MUL     %AX
-        ADDW    (DataSector),   %AX
+        ADDW    %BP,        %AX
         MOV     %AX,        %SI
-        CALL    ReadSectors
+        CALL    ReadSectors     /*  読み込み先 BX の値は自動更新。  */
 
         /*  次のクラスタを読み込む。    */
         POP     %AX
