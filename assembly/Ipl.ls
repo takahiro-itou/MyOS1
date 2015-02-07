@@ -9,8 +9,11 @@ SECTIONS {
     .  =  IPL_BASE;
     .text       : { *(.text) }
     .  =  ALIGN(0x0200);
-    .data       : { *(.data) }
-    .gdt        : { *(.gdt)  }
+    .data       : {
+        *(.data)
+        .  =  ALIGN(32);
+        *(.gdt)
+    }
     .  =  IPL_DATA;
     .bss        : { *(.bss)  }
 }

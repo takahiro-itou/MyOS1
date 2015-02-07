@@ -5,7 +5,8 @@
 
 OBJECT_FILES     =  \
         EnableA20.o  \
-        IplStart.o
+        IplStart.o   \
+        SetupGdt.o
 
 ##
 ##    Environments.
@@ -61,7 +62,7 @@ InstallSystemFiles  :  $(IPL_BIN)
 ##
 
 .s.o  :
-	$(AS)  -o $@  -a=$(@:%.o=%.lst)  $<
+	$(AS)  -o $@  -alm=$(@:%.o=%.lst)  $<
 
 ##
 ##

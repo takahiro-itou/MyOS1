@@ -13,6 +13,7 @@ IPL_BIN          =  IplF12.bin
 IPL_BIN_OBJS     =  \
         ipl/IplStart.o   \
         ipl/EnableA20.o  \
+        ipl/SetupGdt.o   \
         Ipl.ls
 
 ##

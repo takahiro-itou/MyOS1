@@ -9,9 +9,10 @@
 *************************************************************************/
 
         .CODE16
-        .ORG    0x0000
 
 .section    .text
+
+        JMP     ENTRY_POINT
 
 //----------------------------------------------------------------
 //
@@ -29,6 +30,10 @@ ENTRY_POINT:
 
         CALL    _enableA20
         MOV     $MSG_ENABLE_A20,        %SI
+        CALL    WriteString
+
+        CALL    _setupGDT
+        MOV     $MSG_SETUP_GDT,         %SI
         CALL    WriteString
 
 .HALT_LOOP:
