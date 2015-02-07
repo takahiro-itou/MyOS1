@@ -10,6 +10,10 @@ SUBDIRS  =  ipl
 ##
 
 IPL_BIN          =  IplF12.bin
+IPL_BIN_OBJS     =  \
+        ipl/IplStart.o   \
+        ipl/EnableA20.o  \
+        Ipl.ls
 
 ##
 ##    Environments.
@@ -54,7 +58,7 @@ $(SUBDIRS)  :  RECURSIVE
 ##    Build.
 ##
 
-$(IPL_BIN)  :  ipl/IplStart.o
+$(IPL_BIN)  :  $(IPL_BIN_OBJS)
 	$(LD)  -T Ipl.ls  -o $@  $^
 
 InstallSystemFiles  :  $(IPL_BIN)

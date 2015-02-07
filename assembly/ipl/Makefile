@@ -4,6 +4,7 @@
 ##
 
 OBJECT_FILES     =  \
+        EnableA20.o  \
         IplStart.o
 
 ##
