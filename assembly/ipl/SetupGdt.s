@@ -51,7 +51,7 @@
 _setupGDT:
         CLI
         PUSHA
-        LGDT    (GDT_POINT)
+        LGDTL   (GDT_POINT)
         POPA
         STI
         RET

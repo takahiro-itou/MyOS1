@@ -11,7 +11,7 @@ SECTIONS {
     .  =  ALIGN(0x0200);
     .data       : {
         *(.data)
-        .  =  ALIGN(32);
+        .  =  ALIGN(16);
         *(.gdt)
     }
     .  =  IPL_DATA;
