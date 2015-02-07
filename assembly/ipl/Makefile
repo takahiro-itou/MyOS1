@@ -1,11 +1,5 @@
 
 ##
-##    List of Sub Directory.
-##
-
-SUBDIRS  =  bootsector  assembly
-
-##
 ##    List of Files.
 ##
 
@@ -13,6 +7,7 @@ SUBDIRS  =  bootsector  assembly
 ##    Environments.
 ##
 
+SYSDEV_FLOPPY    =  /proc/sys/Device/ImDisk0
 CPDEST_FLOPPY    =  /cygdrive/a
 
 ##
@@ -30,11 +25,18 @@ CP   =  cp
 
 .PHONY  :  all  clean  cleanall  cleanobj  install
 
-all       :  $(SUBDIRS)
-clean     :  $(SUBDIRS)
-cleanall  :  $(SUBDIRS)
-cleanobj  :  $(SUBDIRS)
-install   :  $(SUBDIRS)
+all       :  \
+        IplStart.o
+
+clean     :  cleanobj
+
+cleanall  :  clean
+	$(RM)  *.lst
+
+cleanobj  :
+	$(RM)	*.o
+
+install   :
 
 ##
 ##    Make Sub Directories.
@@ -44,15 +46,23 @@ RECURSIVE   :
 $(SUBDIRS)  :  RECURSIVE
 	$(MAKE)  -C $@  $(MAKECMDGOALS)
 
-
 ##
 ##    Build.
 ##
+
+InstallSystemFiles  :  $(IPL_BIN)
+	$(CP)  -pv  $^  $(CPDEST_FLOPPY)/
 
 ##
 ##    Suffix Rules.
 ##
 
-InstallSystemFile  :  $(IPL_BIN)
-	$(CP)  -pv  $^  $(CPDEST_FLOPPY)/
+.s.o  :
+	$(AS)  -o $@  -a=$(@:%.o=%.lst)  $<
+
+##
+##
+##
+
+IplStart.o  :  Makefile  IplStart.s
 
