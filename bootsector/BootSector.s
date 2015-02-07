@@ -13,6 +13,11 @@
 
 .section    .text
 
+.equ    LOAD_ADDR_FAT        ,  0x7E00
+.equ    LOAD_ADDR_ROOTDIR    ,  0xA200
+
+.equ    DataSector           ,  0x0F00
+
 //----------------------------------------------------------------
 //
 //      BPB (Bios Parameter Block).
@@ -36,6 +41,13 @@ ENTRY_POINT:
         MOV     $0x7C00,  %SP
         MOV     %AX,   %DS
         MOV     %AX,   %ES
+
+        CALL    LoadFAT
+
+        MOV     $LOAD_ADDR_ROOTDIR,     %SI
+        MOVW    (BPB_RootEntryCount),   %CX
+        MOV     $.IPL_IMAGE_NAME,       %DI
+
 .LOAD_FAILURE:
         MOV     $.MSG_FILE_NOT_FOUND,   %SI
         CALL    WriteString
@@ -47,6 +59,40 @@ ENTRY_POINT:
         .STRING     "IPL Not Found."
 .IPL_IMAGE_NAME:
         .STRING     "IPLF12  BIN"
+
+LoadFAT:
+        MOVW    (BPB_SizeOfFAT),    %AX
+        MULB    (BPB_NumberOfFATs)
+        MOV     %AX,    %CX     /*  読み込むセクタ数。  */
+        MOVW    (BPB_RsvdSectorCount),  %SI
+        MOV     $LOAD_ADDR_FAT,         %BX
+        CALL    ReadSectors
+
+        MOV     $0x0020,                %AX
+        MULW    (BPB_RootEntryCount)
+        ADDW    (BPB_BytesPerSector),   %AX
+        DEC     %AX
+        DIVW    (BPB_BytesPerSector)
+        MOV     %AX,    %CX     /*  読み込むセクタ数。  */
+        MOV     $LOAD_ADDR_ROOTDIR,     %BX
+        CALL    ReadSectors
+
+        MOVW    %SI,    (DataSector)
+        RET
+
+//----------------------------------------------------------------
+//
+//      フロッピーディスク読み込み関連。
+//
+
+.include    "ReadFloppy.s"
+
+//----------------------------------------------------------------
+//
+//      ファイルシステム解析関連。
+//
+
+.include    "ReadFat12.s"
 
 //----------------------------------------------------------------
 //

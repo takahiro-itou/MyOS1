@@ -18,13 +18,15 @@
 
 WriteString:
         PUSH    %BX
-.WRITE_CHAR_LOOP:
+
+1:  //  @  .WRITE_CHAR_LOOP:
         LODSB       /*  MOV  [DS:SI],   %AL */
         TESTB   %AL,  %AL
-        JE      .WRITE_CHAR_FIN
+        JE      2f      ##  .WRITE_CHAR_FIN
         CALL    WriteChar
-        JMP     .WRITE_CHAR_LOOP
-.WRITE_CHAR_FIN:
+        JMP     1b      ##  .WRITE_CHAR_LOOP
+
+2:  //  @  .WRITE_CHAR_FIN:
         POP     %BX
         RET
 
