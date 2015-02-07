@@ -36,17 +36,25 @@
 //
 
 ENTRY_POINT:
-        XOR     %AX,   %AX
-        MOV     %AX,   %SS
-        MOV     $0x7C00,  %SP
-        MOV     %AX,   %DS
-        MOV     %AX,   %ES
+        XOR     %AX,        %AX
+        MOV     %AX,        %SS
+        MOV     $0x7C00,    %SP
+        MOV     %AX,        %DS
+        MOV     %AX,        %ES
 
         CALL    LoadFAT
 
         MOV     $LOAD_ADDR_ROOTDIR,     %SI
         MOVW    (BPB_RootEntryCount),   %CX
         MOV     $.IPL_IMAGE_NAME,       %DI
+        CALL    FindRootDirectoryEntry
+        TEST    %SI,        %SI
+        JZ      .LOAD_FAILURE
+
+        MOV     $0x1000,    %BX
+        PUSH    %BX
+        CALL    ReadFile
+        JMP     * %BX
 
 .LOAD_FAILURE:
         MOV     $.MSG_FILE_NOT_FOUND,   %SI
@@ -61,7 +69,7 @@ ENTRY_POINT:
         .STRING     "IPLF12  BIN"
 
 LoadFAT:
-        MOVW    (BPB_SizeOfFAT),    %AX
+        MOVW    (BPB_SizeOfFAT),        %AX
         MULB    (BPB_NumberOfFATs)
         MOV     %AX,    %CX     /*  読み込むセクタ数。  */
         MOVW    (BPB_RsvdSectorCount),  %SI
