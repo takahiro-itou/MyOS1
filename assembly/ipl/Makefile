@@ -3,6 +3,9 @@
 ##    List of Files.
 ##
 
+OBJECT_FILES     =  \
+        IplStart.o
+
 ##
 ##    Environments.
 ##
@@ -25,18 +28,17 @@ CP   =  cp
 
 .PHONY  :  all  clean  cleanall  cleanobj  install
 
-all       :  \
-        IplStart.o
+all       :  $(OBJECT_FILES)
 
 clean     :  cleanobj
 
 cleanall  :  clean
-	$(RM)  *.lst
+	$(RM)  $(OBJECT_FILES:%.o=%.lst)
 
 cleanobj  :
-	$(RM)	*.o
+	$(RM)  $(OBJECT_FILES)
 
-install   :
+install   :  all
 
 ##
 ##    Make Sub Directories.

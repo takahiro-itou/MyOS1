@@ -38,7 +38,7 @@ cleanall   :  clean
 cleanobj   :
 	$(RM)  $(BOOT_SECTOR_IMG:%.img=%.o)
 
-install    :
+install    :  $(BOOT_SECTOR_IMG)
 	$(DD)  if=$(BOOT_SECTOR_IMG)  bs=512  count=1  of=$(SYSDEV_FLOPPY)
 
 

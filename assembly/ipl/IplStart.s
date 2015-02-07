@@ -10,3 +10,23 @@
 
         .CODE16
         .ORG    0x0000
+
+//----------------------------------------------------------------
+//
+//      Entry Point.
+//
+
+ENTRY_POINT:
+
+        //  ダミーのエントリポイント。
+        MOV     $MSG_START_LOADING,     %SI
+        CALL    WriteString
+
+.HALT_LOOP:
+        HLT
+        JMP     .HALT_LOOP
+
+.include    "../../bootsector/WriteString.s"
+
+MSG_START_LOADING:
+        .STRING     "Hello, World!\r\n"
