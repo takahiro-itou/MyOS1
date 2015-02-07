@@ -55,3 +55,10 @@ $(BOOT_SECTOR_IMG)  :  $(BOOT_SECTOR_IMG:%.img=%.o)
 .s.o  :
 	$(AS)  -o $@  -a=$(@:%.o=%.lst)  $<
 
+##
+##
+##
+
+$(BOOT_SECTOR_IMG:%.img=%.o)  :  \
+        Fat12Bpb.inc  WriteString.s
+

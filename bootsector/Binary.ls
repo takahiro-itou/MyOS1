@@ -2,8 +2,12 @@
 OUTPUT_FORMAT(binary)
 OUTPUT_ARCH(i386)
 
-SECTIONS {
-. = 0x7c00;
-.text : { *(.text) }
-}
+BOOT_SECTOR_BASE  =  0x7C00;
 
+SECTIONS {
+    .  =  BOOT_SECTOR_BASE;
+    .text       : { *(.text) }
+    .data       : { *(.data) }
+    .  =  BOOT_SECTOR_BASE + 0x1FE;
+    .sign       : { SHORT(0xAA55) }
+}

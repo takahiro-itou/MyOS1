@@ -1,42 +1,58 @@
 
-BOOTSEC_IMG  =  BootSector.img
-IPL_BIN      =  IplF12.bin
+##
+##    List of Sub Directory.
+##
 
-SYSDEV_FLOPPY  =  /proc/sys/Device/ImDisk0
-CPDEST_FLOPPY  =  /cygdrive/a
+SUBDIRS  =  bootsector
 
-ASM  =  nasm
+##
+##    List of Files.
+##
+
+##
+##    Environments.
+##
+
+CPDEST_FLOPPY    =  /cygdrive/a
+
+##
+##    Commands.
+##
+
+AS   =  /usr/bin/i686-pc-linux-gnu-as
+LD   =  /usr/bin/i686-pc-linux-gnu-ld
 CP   =  cp
-DD   =  dd
+
+##
+##    Targets.
+##
 
 
-.PHONY  :  all  clean  install  \
-           InstallBootSector  InstallSystemFile
+.PHONY  :  all  clean  cleanall  cleanobj  install
+
+all       :  $(SUBDIRS)
+clean     :  $(SUBDIRS)
+cleanall  :  $(SUBDIRS)
+cleanobj  :  $(SUBDIRS)
+install   :  $(SUBDIRS)
+
+##
+##    Make Sub Directories.
+##
+
+RECURSIVE   :
+$(SUBDIRS)  :  RECURSIVE
+	$(MAKE)  -C $@  $(MAKECMDGOALS)
 
 
-all  :  $(BOOTSEC_IMG)  $(IPL_BIN)
+##
+##    Build.
+##
 
-$(BOOTSEC_IMG)  :  \
-        assembly16/BootSector.asm   \
-        assembly16/ReadFloppy.asm   \
-        assembly16/WriteString.asm
-	$(ASM)  -o $@  -l assembly16/BootSector.lst  $<
-
-$(IPL_BIN)  :  \
-        Ipl.asm  \
-        assembly16/EnableA20.asm    \
-        assembly16/WriteString.asm
-	$(ASM)  -o $@  -l assembly16/Ipl.lst  $<
-
-install  :  InstallBootSector  InstallSystemFile
-
-InstallBootSector  :  $(BOOTSEC_IMG)
-	$(DD)  if=$(BOOTSEC_IMG)  bs=512  count=1  of=$(SYSDEV_FLOPPY)
+##
+##    Suffix Rules.
+##
 
 InstallSystemFile  :  $(IPL_BIN)
 	$(CP)  -pv  $^  $(CPDEST_FLOPPY)/
-
-clean    :
-	$(RM)  $(BOOTSEC_IMG)  assembly16/Boot.lst
-	$(RM)  $(IPL_BIN)
 
