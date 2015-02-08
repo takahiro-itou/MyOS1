@@ -35,6 +35,8 @@ ENTRY_POINT:
         MOV     $MSG_ENABLE_A20,        %SI
         CALL    WriteString
 
+        CLI
+
         CALL    _setupGDT
         MOV     $MSG_SETUP_GDT,         %SI
         CALL    WriteString
@@ -42,7 +44,6 @@ ENTRY_POINT:
         MOV     $MSG_PROTECT_START,     %SI
         CALL    WriteString
 
-        CLI
         MOV     %CR0,   %EAX
         OR      $0x01,  %EAX
         MOV     %EAX,   %CR0
@@ -57,10 +58,6 @@ ENTRY_POINT:
         MOV     %AX,        %GS
 
         LJMP    $CODE_SEG , $_startProtet32
-
-_startProtet32:
-        HLT
-        JMP     _startProtet32
 
 .include    "../../bootsector/WriteString.s"
 

@@ -14,7 +14,7 @@ IPL_BIN_OBJS     =  \
         ipl/IplStart.o   \
         ipl/EnableA20.o  \
         ipl/SetupGdt.o   \
-        ipl/Ipl.ls
+        ipl/StartMain.o
 
 ##
 ##    Environments.
@@ -60,8 +60,8 @@ $(SUBDIRS)  :  RECURSIVE
 ##    Build.
 ##
 
-$(IPL_BIN)  :  $(IPL_BIN_OBJS)
-	$(LD)  -T ipl/Ipl.ls  -o $@  $^
+$(IPL_BIN)  :  $(IPL_BIN_OBJS)  ipl/Ipl.ls
+	$(LD)  -T ipl/Ipl.ls  -o $@  $(IPL_BIN_OBJS)
 
 InstallSystemFiles  :  $(IPL_BIN)
 	$(CP)  -pv  $^  $(CPDEST_FLOPPY)/

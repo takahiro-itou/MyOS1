@@ -6,7 +6,8 @@
 OBJECT_FILES     =  \
         EnableA20.o  \
         IplStart.o   \
-        SetupGdt.o
+        SetupGdt.o   \
+        StartMain.o
 
 ##
 ##    Environments.

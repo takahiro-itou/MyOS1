@@ -1,7 +1,7 @@
 //  -*-  coding: utf-8; mode: asm  -*-  //
 /*************************************************************************
 **                                                                      **
-**          SetupGdts.s                                                 **
+**          SetupGdt.s                                                  **
 **                                                                      **
 **          Copyright (C), 2015-2015, Takahiro Itou                     **
 **          All Rights Reserved.                                        **
@@ -49,12 +49,13 @@
 **/
 
 _setupGDT:
-        CLI
-        PUSHA
-        LGDTL   (GDT_POINT)
-        POPA
-        STI
+        LGDT    (GDT_POINT)
         RET
+
+//========================================================================
+//
+//      テーブル本体。
+//
 
 .section    .gdt
 
