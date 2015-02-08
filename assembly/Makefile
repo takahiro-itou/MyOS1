@@ -14,7 +14,7 @@ IPL_BIN_OBJS     =  \
         ipl/IplStart.o   \
         ipl/EnableA20.o  \
         ipl/SetupGdt.o   \
-        Ipl.ls
+        ipl/Ipl.ls
 
 ##
 ##    Environments.
@@ -35,16 +35,17 @@ CP   =  cp
 ##    Targets.
 ##
 
-
 .PHONY  :  all  clean  cleanall  cleanobj  install
 
 all       :  $(SUBDIRS)  $(IPL_BIN)
 
-clean     :  $(SUBDIRS)
+clean     :  $(SUBDIRS)  cleanobj
 	$(RM)  $(IPL_BIN)
 
-cleanall  :  $(SUBDIRS)
+cleanall  :  $(SUBDIRS)  clean
+
 cleanobj  :  $(SUBDIRS)
+
 install   :  $(SUBDIRS)  InstallSystemFiles
 
 ##
@@ -60,7 +61,7 @@ $(SUBDIRS)  :  RECURSIVE
 ##
 
 $(IPL_BIN)  :  $(IPL_BIN_OBJS)
-	$(LD)  -T Ipl.ls  -o $@  $^
+	$(LD)  -T ipl/Ipl.ls  -o $@  $^
 
 InstallSystemFiles  :  $(IPL_BIN)
 	$(CP)  -pv  $^  $(CPDEST_FLOPPY)/
@@ -75,5 +76,4 @@ InstallSystemFiles  :  $(IPL_BIN)
 ##
 ##
 ##
-
 
