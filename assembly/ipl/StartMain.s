@@ -20,7 +20,6 @@
 //
 
 _startProtet32:
-        ////    CALL    _startIplMain
 
 .HALT_LOOP:
         HLT

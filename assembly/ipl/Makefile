@@ -21,6 +21,7 @@ CPDEST_FLOPPY    =  /cygdrive/a
 ##
 
 AS   =  /usr/bin/i686-pc-linux-gnu-as
+CC   =  /usr/bin/i686-pc-linux-gnu-gcc
 LD   =  /usr/bin/i686-pc-linux-gnu-ld
 CP   =  cp
 

@@ -28,6 +28,7 @@ CPDEST_FLOPPY    =  /cygdrive/a
 ##
 
 AS   =  /usr/bin/i686-pc-linux-gnu-as
+CC   =  /usr/bin/i686-pc-linux-gnu-gcc
 LD   =  /usr/bin/i686-pc-linux-gnu-ld
 CP   =  cp
 
@@ -43,6 +44,7 @@ clean     :  $(SUBDIRS)  cleanobj
 	$(RM)  $(IPL_BIN)
 
 cleanall  :  $(SUBDIRS)  clean
+	$(RM)  $(IPL_BIN:%.bin=%.map)
 
 cleanobj  :  $(SUBDIRS)
 
@@ -61,7 +63,9 @@ $(SUBDIRS)  :  RECURSIVE
 ##
 
 $(IPL_BIN)  :  $(IPL_BIN_OBJS)  ipl/Ipl.ls
-	$(LD)  -T ipl/Ipl.ls  -o $@  $(IPL_BIN_OBJS)
+	$(LD)  -Map $(IPL_BIN:%.bin=%.map)  \
+        -T ipl/Ipl.ls  -nostdlib        \
+        -o $@  $(IPL_BIN_OBJS)
 
 InstallSystemFiles  :  $(IPL_BIN)
 	$(CP)  -pv  $^  $(CPDEST_FLOPPY)/
