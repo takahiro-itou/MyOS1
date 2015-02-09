@@ -53,14 +53,17 @@ $(BOOT_SECTOR_IMG)  :  $(BOOT_SECTOR_IMG:%.img=%.o)
 ##    Suffix Rules.
 ##
 .s.o  :
-	$(AS)  -o $@  -a=$(@:%.o=%.lst)  $<
+	$(AS)  -o $@  -I ../assembly/common  -a=$(@:%.o=%.lst)  $<
 
 ##
 ##
 ##
 
 $(BOOT_SECTOR_IMG:%.img=%.o)  :  \
-        Fat12Bpb.inc  ReadFat12.s  ReadFloppy.s  WriteString.s  \
+        Fat12Bpb.inc  \
+        ReadFat12.s   \
+        ../assembly/common/ReadFloppy.s  \
+        WriteString.s  \
         Binary.ls
 
 
