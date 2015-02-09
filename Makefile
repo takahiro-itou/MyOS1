@@ -3,7 +3,7 @@
 ##    List of Sub Directory.
 ##
 
-SUBDIRS  =  bootsector  assembly
+SUBDIRS  =  bootsector  assembly  kernel
 
 ##
 ##    List of Files.
