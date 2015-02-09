@@ -52,8 +52,8 @@ FindRootDirectoryEntry:
 **      ルートディレクトリ領域内から探しておく。
 **  @param [in] BP      データ領域の先頭セクタ番号。
 **  @param[out] ES:BX   読み込んだデータの格納先。
-**  @return
-**  @attention  破壊されるレジスタ：AX, CX
+**  @return     AX      読み込んだバイト数。
+**  @attention  破壊されるレジスタ：CX
 **/
 
 ReadFile:
@@ -96,7 +96,9 @@ ReadFile:
         JB      1b      ##  .READ_FILE_LOOP
 
 4:  //  @  .READ_FILE_FINISH:
+        MOV     %BX,    %AX
         POP     %BX
+        SUB     %BX,    %AX
         POP     %SI
         POP     %DS
         RET
