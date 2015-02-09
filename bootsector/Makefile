@@ -61,7 +61,7 @@ $(BOOT_SECTOR_IMG)  :  $(BOOT_SECTOR_IMG:%.img=%.o)
 
 $(BOOT_SECTOR_IMG:%.img=%.o)  :  \
         Fat12Bpb.inc  \
-        ReadFat12.s   \
+        ../assembly/common/ReadFat12.s   \
         ../assembly/common/ReadFloppy.s  \
         WriteString.s  \
         Binary.ls
