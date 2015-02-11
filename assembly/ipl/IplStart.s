@@ -12,10 +12,15 @@
 
 .section    .text
 
-        JMP     ENTRY_POINT
-
 .equ    CODE_SEG     ,  0x0010
 .equ    DATA_SEG     ,  0x0018
+
+        JMP         ENTRY_POINT
+        .BYTE       0x90
+
+.include    "Fat12Bpb.inc"
+
+        .space      0x12,   0x00
 
 //----------------------------------------------------------------
 //
@@ -30,6 +35,25 @@ ENTRY_POINT:
 
         MOV     $MSG_START_LOADING,     %SI
         CALL    WriteString
+
+        MOV     $MSG_FIND_KERNEL,       %SI
+        CALL    WriteString
+
+        MOV     $LOAD_ADDR_ROOTDIR,     %SI
+        MOVW    (BPB_RootEntryCount),   %CX
+        MOV     $.KERNEL_IMAGE_NAME,    %DI
+        CALL    FindRootDirectoryEntry
+        TEST    %SI,    %SI
+        JZ      .SHOW_ERROR
+
+        CALL    .SHOW_OK_MESSAGE
+
+        MOV     $MSG_READ_KERNEL,       %SI
+        CALL    WriteString
+
+        MOV     $0x2000,    %BX
+        CALL    ReadFile
+        CALL    .SHOW_OK_MESSAGE
 
         CALL    _enableA20
         MOV     $MSG_ENABLE_A20,        %SI
@@ -59,13 +83,48 @@ ENTRY_POINT:
 
         LJMP    $CODE_SEG , $_startProtet32
 
+.SHOW_ERROR:
+        MOV     $MSG_FAILURE,   %SI
+        CALL    WriteString
+
+.HALT_LOOP:
+        HLT
+        JMP     .HALT_LOOP
+
+.SHOW_OK_MESSAGE:
+        MOV     $MSG_SUCCESS,   %SI
+        CALL    WriteString
+        RET
+
+.KERNEL_IMAGE_NAME:
+        .STRING     "KERNEL0 IMG"
+
+//----------------------------------------------------------------
+//
+//      フロッピーディスク読み込み関連。
+//
+
+.include    "ReadFloppy.s"
+
+//----------------------------------------------------------------
+//
+//      ファイルシステム解析関連。
+//
+
+.include    "ReadFat12.s"
+
+//----------------------------------------------------------------
+//
+//      文字列表示関連。
+//
+
 .include    "../../bootsector/WriteString.s"
 
 .section    .data
 
 //----------------------------------------------------------------
 //
-//      メッセージ。
+//      文字列定数。
 //
 
 MSG_FAILURE:
@@ -75,6 +134,10 @@ MSG_SUCCESS:
 
 MSG_START_LOADING:
         .STRING     "Loading Operating System\r\n"
+MSG_FIND_KERNEL:
+        .STRING     "Find Kernel Image ..."
+MSG_READ_KERNEL:
+        .STRING     "Read Kernel Image ..."
 MSG_ENABLE_A20:
         .STRING     "Enabled A-20.\r\n"
 MSG_SETUP_GDT:

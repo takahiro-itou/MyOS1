@@ -15,6 +15,7 @@ OBJECT_FILES     =  \
 
 SYSDEV_FLOPPY    =  /proc/sys/Device/ImDisk0
 CPDEST_FLOPPY    =  /cygdrive/a
+AS_CMN_DIR       = ../common
 
 ##
 ##    Commands.
@@ -64,7 +65,7 @@ InstallSystemFiles  :  $(IPL_BIN)
 ##
 
 .s.o  :
-	$(AS)  -o $@  -alm=$(@:%.o=%.lst)  $<
+	$(AS)  -o $@  -I $(AS_CMN_DIR)  -alm=$(@:%.o=%.lst)  $<
 
 ##
 ##
