@@ -4,7 +4,9 @@
 ##
 
 KERNEL_0_IMG   =  Kernel0.img
-KERNEL_0_OBJS  =  KernelMain.o
+KERNEL_0_OBJS  =  \
+        KernelEntry.o  \
+        KernelMain.o
 
 ##
 ##    Environments.
@@ -38,6 +40,7 @@ clean      :  cleanobj
 
 cleanall   :  clean
 	$(RM)  $(KERNEL_0_IMG:%.img=%.map)
+	$(RM)  $(KERNEL_0_OBJS:%.o=%.lst)
 
 cleanobj   :
 	$(RM)  $(KERNEL_0_OBJS)
@@ -66,9 +69,5 @@ $(KERNEL_0_IMG)  :  $(KERNEL_0_OBJS)
 ##
 
 $(KERNEL_0_IMG:%.img=%.o)  :  \
-        $(AS_CMN_DIR)/Fat12Bpb.inc  \
-        $(AS_CMN_DIR)/ReadFat12.s   \
-        $(AS_CMN_DIR)/ReadFloppy.s  \
-        WriteString.s  \
-        Binary.ls
+        Kernel0.ls
 

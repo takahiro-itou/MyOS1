@@ -12,8 +12,9 @@
 
 .section    .text
 
-.equ    CODE_SEG     ,  0x0010
-.equ    DATA_SEG     ,  0x0018
+.equ    CODE_SEG             ,  0x0010
+.equ    DATA_SEG             ,  0x0018
+.equ    KERNEL_TEMP_ADDR     ,  0x00002000
 
         JMP         ENTRY_POINT
         .BYTE       0x90
@@ -51,7 +52,7 @@ ENTRY_POINT:
         MOV     $MSG_READ_KERNEL,       %SI
         CALL    WriteString
 
-        MOV     $0x2000,    %BX
+        MOV     $KERNEL_TEMP_ADDR,      %BX
         CALL    ReadFile
         CALL    .SHOW_OK_MESSAGE
 
