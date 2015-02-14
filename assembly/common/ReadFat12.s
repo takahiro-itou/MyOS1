@@ -71,7 +71,7 @@ ReadFile:
         SUB     $0x0002,    %AX
         XOR     %CX,        %CX
         MOVB    (BPB_SectorsPerCluster),    %CL
-        MUL     %AX
+        MUL     %CX
         ADDW    %BP,        %AX
         MOV     %AX,        %SI
         CALL    ReadSectors     /*  読み込み先 BX の値は自動更新。  */
