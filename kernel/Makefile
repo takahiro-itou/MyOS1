@@ -45,6 +45,8 @@ cleanall   :  clean
 cleanobj   :
 	$(RM)  $(KERNEL_0_OBJS)
 
+disasm     :
+
 install    :  $(KERNEL_0_IMG)
 	$(CP)  -pv  $^  $(CPDEST_FLOPPY)/
 

@@ -27,10 +27,11 @@ CPDEST_FLOPPY    =  /cygdrive/a
 ##    Commands.
 ##
 
-AS   =  /usr/bin/i686-pc-linux-gnu-as
-CC   =  /usr/bin/i686-pc-linux-gnu-gcc
-LD   =  /usr/bin/i686-pc-linux-gnu-ld
-CP   =  cp
+AS      =  /usr/bin/i686-pc-linux-gnu-as
+CC      =  /usr/bin/i686-pc-linux-gnu-gcc
+LD      =  /usr/bin/i686-pc-linux-gnu-ld
+CP      =  cp
+DISASM  =  objdump
 
 ##
 ##    Targets.
@@ -47,6 +48,10 @@ cleanall  :  $(SUBDIRS)  clean
 	$(RM)  $(IPL_BIN:%.bin=%.map)
 
 cleanobj  :  $(SUBDIRS)
+
+disasm    :
+	$(DISASM)  -D -d -b binary  -mi8086  --start-address=0x50  \
+            $(IPL_BIN)  >  $(IPL_BIN:%.bin=%.dis.s)
 
 install   :  $(SUBDIRS)  InstallSystemFiles
 
