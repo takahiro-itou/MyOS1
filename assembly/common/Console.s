@@ -131,7 +131,7 @@ writeText:
 /**   画面に数値を表示する。
 **
 **  @param [in] AL    表示する数値。
-**  @param [in] BH    表示属性。
+**  @param [in] DH    表示属性。
 **  @param [in] EDI   表示する位置。
 **  @return     EDI   次の表示位置。
 **  @attention  破壊されるレジスタ：無し。
@@ -144,11 +144,11 @@ writeByteHex:
 
         MOV     %ECX,   %EAX
         SHR     $4,     %EAX
-        MOV     %BH,    %AH
+        MOV     %DH,    %AH
         CALL    ._writeHexValue
 
         MOV     %ECX,   %EAX
-        MOV     %BH,    %AH
+        MOV     %DH,    %AH
         CALL    ._writeHexValue
 
         POP     %ECX
@@ -159,7 +159,7 @@ writeByteHex:
 /**   画面に数値を表示する。
 **
 **  @param [in] AX    表示する数値。
-**  @param [in] BH    表示属性。
+**  @param [in] DH    表示属性。
 **  @param [in] EDI   表示する位置。
 **  @return     EDI   次の表示位置。
 **  @attention  破壊されるレジスタ：無し。
@@ -172,18 +172,18 @@ writeWordHex:
 
         MOV     %ECX,   %EAX
         SHR     $12,    %EAX
-        MOV     %BH,    %AH
+        MOV     %DH,    %AH
         CALL    ._writeHexValue
         MOV     %ECX,   %EAX
         SHR     $8,     %EAX
-        MOV     %BH,    %AH
+        MOV     %DH,    %AH
         CALL    ._writeHexValue
         MOV     %ECX,   %EAX
         SHR     $4,     %EAX
-        MOV     %BH,    %AH
+        MOV     %DH,    %AH
         CALL    ._writeHexValue
         MOV     %ECX,   %EAX
-        MOV     %BH,    %AH
+        MOV     %DH,    %AH
         CALL    ._writeHexValue
 
         POP     %ECX
