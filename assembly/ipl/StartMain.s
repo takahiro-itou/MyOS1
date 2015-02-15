@@ -29,10 +29,19 @@ _startProtet32:
         MOV     $0x05,      %EDX
         MOV     $MSG_PROTECT_START, %ESI
         CALL    writeText
+
+        MOV     $MSG_CHECK_A20,     %ESI
+        CALL    writeText
+        CALL    _checkEnableA20
+        TEST    %EAX,   %EAX
+        JZ      .SHOW_ERROR_MESSAGE
+        CALL    .SHOW_OK_MESSAGE
+        JMP     .HALT_LOOP
+
+        /*  カーネルイメージをコピーする。  */
         MOV     $MSG_COPY_KERNEL,   %ESI
         CALL    writeText
 
-        /*  カーネルイメージをコピーする。  */
         CLD
         MOV     $KERNEL_TEMP_ADDR,  %ESI
         MOV     $KERNEL_BASE_ADDR,  %EDI
@@ -58,6 +67,53 @@ _startProtet32:
         CALL    writeText
         RET
 
+//----------------------------------------------------------------
+/**   アドレスラインの A-20 が有効になっているか確認する。
+**
+**  @return     EAX == 0  無効。
+**  @return     EAX != 0  有効。
+**/
+
+_checkEnableA20:
+        PUSH    %ECX
+        PUSH    %ESI
+        PUSH    %EDI
+
+        //  有効になっていなければ、ラップしている筈。      //
+        //  以下の異なる二箇所に異なる値を書き込んでみる。  //
+        //  もし有効になってないなら、同じ値になる。        //
+        MOV     $0x00000F00,    %ESI
+        MOV     $0x00100F00,    %EDI
+
+        //  書き込む場所の現在の値を保存しておく。  //
+        MOV     (%ESI),     %EAX
+        PUSH    %EAX
+        MOV     (%EDI),     %EAX
+        PUSH    %EAX
+
+        //  壱番目のアドレスに適当な値を書き込む。  //
+        MOV     $0x55AA55AA,    %EAX
+        MOV     %EAX,       (%ESI)
+        //  二番目のアドレスに別の値を書き込む。    //
+        MOV     $0x12345678,    %EAX
+        MOV     %EAX,       (%EDI)
+
+        //  壱番目のアドレスから値を読み込んで、    //
+        //  それを二番目のアドレスの値と比較する。  //
+        MOV     (%ESI),     %ECX
+        SUB     %EAX,       %ECX
+
+        POP     %EAX
+        MOV     %EAX,       (%EDI)
+        POP     %EAX
+        MOV     %EAX,       (%ESI)
+
+        POP     %EDI
+        POP     %ESI
+        XCHG    %ECX,       %EAX
+        POP     %ECX
+        RET
+
 .include    "Console.s"
 
 //----------------------------------------------------------------
@@ -74,3 +130,5 @@ MSG_PROTECT_START:
         .STRING     "Start 32bit Protect Mode ...\r\n"
 MSG_COPY_KERNEL:
         .STRING     "Copy Kernel Image to 0x00100000 ..."
+MSG_CHECK_A20:
+        .STRING     "Checking A-20 Line Enabled ..."
