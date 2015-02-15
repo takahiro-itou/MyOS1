@@ -71,7 +71,7 @@ scrollConsole:
 **  @param [in] EDX       表示する位置（垂直位置）。
 **  @return     EBX       次の表示位置（水平方向）。
 **  @return     EDX       次の表示位置（垂直方向）。
-**  @attention  破壊されるレジスタ：AX
+**  @attention  破壊されるレジスタ：無し。
 **/
 
 writeText:
@@ -123,6 +123,69 @@ writeText:
 
         POP     %ESI
         POP     %EDI
+        POP     %ECX
+        POP     %EAX
+        RET
+
+//----------------------------------------------------------------
+/**   画面にバイナリダンプを行う。
+**
+**  @param [in] AH        表示する文字の属性。
+**  @param [in] DS:ESI    表示するデータ。
+**  @param [in] EBX       表示する位置（水平方向）。
+**  @param [in] EDX       表示する位置（垂直位置）。
+**  @return     EBX       次の表示位置（水平方向）。
+**  @return     EDX       次の表示位置（垂直方向）。
+**  @attention  破壊されるレジスタ：無し。
+**/
+
+writeHexDump:
+        PUSH    %EAX
+        PUSH    %ECX
+        PUSH    %EBP
+        PUSH    %ESI
+        PUSH    %EDI
+
+        CALL    ._calcVramAddrToWrite
+        MOV     %EDX,   %EBP
+        MOV     %EAX,   %EDX
+
+1:  //  @  .DUMP_BYTE_LOOP:
+
+        LODSB
+        CALL    writeByteHex
+        MOV     $0x20,  %AX
+        STOSW
+        ADD     $0x03,  %EBX
+
+        CMP     $80,    %EBX
+        JL      3f      ##  .DUMP_BYTE_CONTINUE
+
+        SUB     $80,    %EBX
+
+        PUSH    %EDX
+        MOV     %EBP,   %EDX
+        INC     %EDX
+        CMP     $25,    %EDX
+        JL      2f      ##  .CALC_VRAM_ADDR
+
+        PUSH    %ECX
+        MOV     $1,     %ECX
+        CALL    scrollConsole
+        SUB     %ECX,   %EDX
+        POP     %ECX
+2:  //  @  .CALC_VRAM_ADDR:
+        CALL    ._calcVramAddrToWrite
+        MOV     %EDX,   %EBP
+        POP     %EDX
+
+3:  //  @  .DUMP_BYTE_CONTINUE:
+        LOOP    1b      ##  .DUMP_BYTE_LOOP
+
+        MOV     %EBP,   %EDX
+        POP     %EDI
+        POP     %ESI
+        POP     %EBP
         POP     %ECX
         POP     %EAX
         RET
@@ -197,6 +260,7 @@ writeWordHex:
 **  @param [in] EBX   表示する位置（水平方向）。
 **  @param [in] EDX   表示する位置（垂直位置）。
 **  @return     EDI   書き込むアドレス。
+**  @attention  破壊されるレジスタ：無し。
 **/
 ._calcVramAddrToWrite:
         PUSH    %EAX
