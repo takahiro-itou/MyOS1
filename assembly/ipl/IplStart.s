@@ -93,8 +93,10 @@ ENTRY_POINT:
         JMP     .HALT_LOOP
 
 .SHOW_OK_MESSAGE:
+        PUSH    %SI
         MOV     $MSG_SUCCESS,   %SI
         CALL    WriteString
+        POP     %SI
         RET
 
 .KERNEL_IMAGE_NAME:
