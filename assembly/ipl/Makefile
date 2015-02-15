@@ -71,7 +71,8 @@ InstallSystemFiles  :  $(IPL_BIN)
 ##
 ##
 
-IplStart.o  :  Makefile  IplStart.s  \
+IplStart.o   :  Makefile  IplStart.s
+StartMain.o  :  Makefile  IplStart.s  \
         ../common/Console.s
 
 

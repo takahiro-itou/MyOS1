@@ -38,3 +38,5 @@ _startProtet32:
 .HALT_LOOP:
         HLT
         JMP     .HALT_LOOP
+
+.include    "Console.s"
