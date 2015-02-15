@@ -36,7 +36,6 @@ _startProtet32:
         TEST    %EAX,   %EAX
         JZ      .SHOW_ERROR_MESSAGE
         CALL    .SHOW_OK_MESSAGE
-        JMP     .HALT_LOOP
 
         /*  カーネルイメージをコピーする。  */
         MOV     $MSG_COPY_KERNEL,   %ESI
@@ -50,7 +49,8 @@ _startProtet32:
         REP     MOVSD
 
         CALL    .SHOW_OK_MESSAGE
-        JMP     .HALT_LOOP
+
+        /*  読み込んだカーネルへジャンプ。  */
         LJMP    $CODE_SEG , $KERNEL_BASE_ADDR
 
 .SHOW_ERROR_MESSAGE:

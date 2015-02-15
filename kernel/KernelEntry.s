@@ -20,7 +20,7 @@
 //
 
 ENTRY_POINT:
-//        CALL    startKernel
+        CALL    startKernel
 
 .HALT_LOOP:
         HLT
