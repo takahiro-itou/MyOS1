@@ -76,22 +76,54 @@ scrollConsole:
 
 writeText:
         PUSH    %EAX
+        PUSH    %ECX
         PUSH    %EDI
+        PUSH    %ESI
 
-        MOV     $VRAM_ADDR,     %EDI
+        CALL    ._calcVramAddrToWrite
 
 1:  //  @  .WRITE_CHAR_LOOP:
         LODSB   /*  MOVB    %DS:(%ESI),  %AL;   INC  %ESI       */
         TEST    %AL,    %AL
         JE      2f      ##  .WRITE_CHAR_FIN
 
+        TEST    $0xE0,  %AL
+        JNZ     3f      ##  .WRITE_CHAR_IMM
+
+.WRITE_CTRL_CHAR:
+        CMP     $0x0A,  %AL
+        JE      4f      ##  .GOTO_NEXT_LINE
+        CMP     $0x0D,  %AL
+        JNE     3f      ##  .WRITE_CHAR_IMM
+.WRITE_CTRL_CHAR_OD:
+        /*  キャリッジリターン。    */
+        XOR     %EBX,   %EBX
+        JMP     5f      ##  .CALC_VRAM_ADDR
+
+3:  //  @  .WRITE_CHAR_IMM:
         STOSW   /*  MOVW    %AX,  %ES:(%EDI);   ADD  $2,  %EDI  */
 
+        INC     %EBX
+        CMP     $80,    %EBX
+        JL      1b      ##  .WRITE_CHAR_LOOP
+        XOR     %EBX,   %EBX
+
+4:  //  @  .GOTO_NEXT_LINE
+        INC     %EDX
+        CMP     $25,    %EDX
+        JL      5f      ##  .CALC_VRAM_ADDR
+        MOV     $1,     %ECX
+        CALL    scrollConsole
+        SUB     %ECX,   %EDX
+5:  //  @  .CALC_VRAM_ADDR
+        CALL    ._calcVramAddrToWrite
         JMP     1b      ##  .WRITE_CHAR_LOOP
 
 2:  //  @  .WRITE_CHAR_FIN:
 
+        POP     %ESI
         POP     %EDI
+        POP     %ECX
         POP     %EAX
         RET
 
@@ -113,11 +145,11 @@ writeByteHex:
         MOV     %ECX,   %EAX
         SHR     $4,     %EAX
         MOV     %BH,    %AH
-        CALL    writeHexValue
+        CALL    ._writeHexValue
 
         MOV     %ECX,   %EAX
         MOV     %BH,    %AH
-        CALL    writeHexValue
+        CALL    ._writeHexValue
 
         POP     %ECX
         POP     %EAX
@@ -141,20 +173,40 @@ writeWordHex:
         MOV     %ECX,   %EAX
         SHR     $12,    %EAX
         MOV     %BH,    %AH
-        CALL    writeHexValue
+        CALL    ._writeHexValue
         MOV     %ECX,   %EAX
         SHR     $8,     %EAX
         MOV     %BH,    %AH
-        CALL    writeHexValue
+        CALL    ._writeHexValue
         MOV     %ECX,   %EAX
         SHR     $4,     %EAX
         MOV     %BH,    %AH
-        CALL    writeHexValue
+        CALL    ._writeHexValue
         MOV     %ECX,   %EAX
         MOV     %BH,    %AH
-        CALL    writeHexValue
+        CALL    ._writeHexValue
 
         POP     %ECX
+        POP     %EAX
+        RET
+
+
+//----------------------------------------------------------------
+/**   表示位置からデータを書き込むアドレスを計算する。
+**
+**  @param [in] EBX   表示する位置（水平方向）。
+**  @param [in] EDX   表示する位置（垂直位置）。
+**  @return     EDI   書き込むアドレス。
+**/
+._calcVramAddrToWrite:
+        PUSH    %EAX
+
+        LEA     (%EDX, %EDX, 4),    %EAX
+        SHL     $0x04,  %EAX
+        ADD     %EBX,   %EAX
+        MOV     $VRAM_ADDR,         %EDI
+        LEA     (%EDI, %EAX, 2),    %EDI
+
         POP     %EAX
         RET
 
@@ -168,7 +220,7 @@ writeWordHex:
 **  @attention  破壊されるレジスタ：AX
 **/
 
-writeHexValue:
+._writeHexValue:
         AND     $0x0F,  %AL
         CMP     $10,    %AL
         JL      1f
