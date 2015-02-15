@@ -47,11 +47,13 @@ ENTRY_POINT:
         TEST    %SI,    %SI
         JZ      .SHOW_ERROR
 
+        PUSH    %SI
         CALL    .SHOW_OK_MESSAGE
 
         MOV     $MSG_READ_KERNEL,       %SI
         CALL    WriteString
 
+        POP     %SI
         MOV     $KERNEL_TEMP_ADDR,      %BX
         CALL    ReadFile
         CALL    .SHOW_OK_MESSAGE
