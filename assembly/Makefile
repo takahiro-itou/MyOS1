@@ -3,7 +3,7 @@
 ##    List of Sub Directory.
 ##
 
-SUBDIRS  =  ipl
+SUBDIRS  =  bootsector  ipl
 
 ##
 ##    List of Files.

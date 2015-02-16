@@ -65,9 +65,9 @@ $(BOOT_SECTOR_IMG)  :  $(BOOT_SECTOR_IMG:%.img=%.o)
 ##
 
 $(BOOT_SECTOR_IMG:%.img=%.o)  :  \
-        $(AS_CMN_DIR)/Fat12Bpb.inc  \
-        $(AS_CMN_DIR)/ReadFat12.s   \
-        $(AS_CMN_DIR)/ReadFloppy.s  \
-        WriteString.s  \
+        $(AS_CMN_DIR)/Fat12Bpb.inc   \
+        $(AS_CMN_DIR)/ReadFat12.s    \
+        $(AS_CMN_DIR)/ReadFloppy.s   \
+        $(AS_CMN_DIR)/WriteString.s  \
         BootSector.ls
 
