@@ -10,7 +10,7 @@ BOOT_SECTOR_IMG  =  BootSector.img
 ##
 
 SYSDEV_FLOPPY    =  /proc/sys/Device/ImDisk0
-AS_CMN_DIR       = ../assembly/common
+AS_CMN_DIR       = ../common
 
 ##
 ##    Commands.
@@ -20,6 +20,7 @@ AS      =  /usr/bin/i686-pc-linux-gnu-as
 LD      =  /usr/bin/i686-pc-linux-gnu-ld
 CP      =  cp
 DD      =  dd
+DISASM  =  objdump
 
 ##
 ##    Targets.
@@ -69,5 +70,4 @@ $(BOOT_SECTOR_IMG:%.img=%.o)  :  \
         $(AS_CMN_DIR)/ReadFloppy.s  \
         WriteString.s  \
         Binary.ls
-
 
