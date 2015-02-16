@@ -3,7 +3,7 @@
 ##    List of Sub Directory.
 ##
 
-SUBDIRS  =  bootsector
+SUBDIRS  =  bootsector  assembly  kernel
 
 ##
 ##    List of Files.
@@ -19,9 +19,10 @@ CPDEST_FLOPPY    =  /cygdrive/a
 ##    Commands.
 ##
 
-AS   =  /usr/bin/i686-pc-linux-gnu-as
-LD   =  /usr/bin/i686-pc-linux-gnu-ld
-CP   =  cp
+AS      =  /usr/bin/i686-pc-linux-gnu-as
+LD      =  /usr/bin/i686-pc-linux-gnu-ld
+CP      =  cp
+DISASM  =  objdump  -mi386
 
 ##
 ##    Targets.
@@ -34,6 +35,7 @@ all       :  $(SUBDIRS)
 clean     :  $(SUBDIRS)
 cleanall  :  $(SUBDIRS)
 cleanobj  :  $(SUBDIRS)
+disasm    :  $(SUBDIRS)
 install   :  $(SUBDIRS)
 
 ##

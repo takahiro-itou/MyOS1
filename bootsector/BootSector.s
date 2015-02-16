@@ -72,17 +72,26 @@ ENTRY_POINT:
 
         MOV     $0x1000,    %BX
         CALL    ReadFile
+        CMP     $0x1000,    %AX     /*  IPL は 4 KB 以内。  */
+        JA      .IPL_SIZE_ERROR
         JMP     * %BX
 
 .LOAD_FAILURE:
         MOV     $.MSG_FILE_NOT_FOUND,   %SI
         CALL    WriteString
+        JMP     .HALT_LOOP
+.IPL_SIZE_ERROR:
+        MOV     $.MSG_IPL_TOO_LARGE,    %SI
+        CALL    WriteString
+        JMP     .HALT_LOOP
 .HALT_LOOP:
         HLT
         JMP     .HALT_LOOP
 
 .MSG_FILE_NOT_FOUND:
         .STRING     "IPL Not Found."
+.MSG_IPL_TOO_LARGE:
+        .STRING     "FATAL: IPL Too Large"
 .IPL_IMAGE_NAME:
         .STRING     "IPLF12  BIN"
 

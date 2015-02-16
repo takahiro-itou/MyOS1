@@ -11,3 +11,4 @@ SECTIONS {
     .  =  BOOT_SECTOR_BASE + 0x1FE;
     .sign       : { SHORT(0xAA55) }
 }
+

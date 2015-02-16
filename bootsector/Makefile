@@ -10,6 +10,7 @@ BOOT_SECTOR_IMG  =  BootSector.img
 ##
 
 SYSDEV_FLOPPY    =  /proc/sys/Device/ImDisk0
+AS_CMN_DIR       = ../assembly/common
 
 ##
 ##    Commands.
@@ -38,7 +39,9 @@ cleanall   :  clean
 cleanobj   :
 	$(RM)  $(BOOT_SECTOR_IMG:%.img=%.o)
 
-install    :
+disasm     :
+
+install    :  $(BOOT_SECTOR_IMG)
 	$(DD)  if=$(BOOT_SECTOR_IMG)  bs=512  count=1  of=$(SYSDEV_FLOPPY)
 
 
@@ -52,15 +55,19 @@ $(BOOT_SECTOR_IMG)  :  $(BOOT_SECTOR_IMG:%.img=%.o)
 ##
 ##    Suffix Rules.
 ##
+
 .s.o  :
-	$(AS)  -o $@  -a=$(@:%.o=%.lst)  $<
+	$(AS)  -o $@  -I $(AS_CMN_DIR)  -a=$(@:%.o=%.lst)  $<
 
 ##
 ##
 ##
 
 $(BOOT_SECTOR_IMG:%.img=%.o)  :  \
-        Fat12Bpb.inc  ReadFat12.s  ReadFloppy.s  WriteString.s  \
+        $(AS_CMN_DIR)/Fat12Bpb.inc  \
+        $(AS_CMN_DIR)/ReadFat12.s   \
+        $(AS_CMN_DIR)/ReadFloppy.s  \
+        WriteString.s  \
         Binary.ls
 
 
