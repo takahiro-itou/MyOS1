@@ -55,6 +55,3 @@ $(SUBDIRS)  :  RECURSIVE
 ##    Suffix Rules.
 ##
 
-InstallSystemFile  :  $(IPL_BIN)
-	$(CP)  -pv  $^  $(CPDEST_FLOPPY)/
-

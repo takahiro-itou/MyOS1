@@ -3,9 +3,10 @@
 ##    List of Files.
 ##
 
-OBJECT_FILES     =  \
-        EnableA20.o  \
+IPL_BIN          =  IplF12.bin
+IPL_BIN_OBJS     =  \
         IplStart.o   \
+        EnableA20.o  \
         SetupGdt.o   \
         StartMain.o
 
@@ -21,29 +22,37 @@ AS_CMN_DIR       = ../common
 ##    Commands.
 ##
 
-AS   =  /usr/bin/i686-pc-linux-gnu-as
-CC   =  /usr/bin/i686-pc-linux-gnu-gcc
-LD   =  /usr/bin/i686-pc-linux-gnu-ld
-CP   =  cp
+AS      =  /usr/bin/i686-pc-linux-gnu-as
+CC      =  /usr/bin/i686-pc-linux-gnu-gcc
+LD      =  /usr/bin/i686-pc-linux-gnu-ld
+CP      =  cp
+DISASM  =  objdump
 
 ##
 ##    Targets.
 ##
 
 
-.PHONY  :  all  clean  cleanall  cleanobj  install
+.PHONY     :  all  clean  cleanall  cleanobj  disasm  install
+.SUFFIXES  :  .o  .s
 
-all       :  $(OBJECT_FILES)
+all       :  $(IPL_BIN)
 
 clean     :  cleanobj
+	$(RM)  $(IPL_BIN)
 
 cleanall  :  clean
-	$(RM)  $(OBJECT_FILES:%.o=%.lst)
+	$(RM)  $(IPL_BIN_OBJS:%.o=%.lst)
+	$(RM)  $(IPL_BIN:%.bin=%.map)
 
 cleanobj  :
-	$(RM)  $(OBJECT_FILES)
+	$(RM)  $(IPL_BIN_OBJS)
 
-install   :  all
+disasm    :
+	$(DISASM)  -D -d -b binary  -mi8086  --start-address=0x50  \
+            $(IPL_BIN)  >  $(IPL_BIN:%.bin=%.dis.s)
+
+install   :  all  InstallFiles
 
 ##
 ##    Make Sub Directories.
@@ -57,7 +66,12 @@ $(SUBDIRS)  :  RECURSIVE
 ##    Build.
 ##
 
-InstallSystemFiles  :  $(IPL_BIN)
+$(IPL_BIN)  :  $(IPL_BIN_OBJS)  Ipl.ls
+	$(LD)  -Map $(IPL_BIN:%.bin=%.map)  \
+        -T Ipl.ls  -nostdlib            \
+        -o $@  $(IPL_BIN_OBJS)
+
+InstallFiles  :  $(IPL_BIN)
 	$(CP)  -pv  $^  $(CPDEST_FLOPPY)/
 
 ##
