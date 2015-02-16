@@ -123,7 +123,7 @@ ENTRY_POINT:
 //      文字列表示関連。
 //
 
-.include    "../../bootsector/WriteString.s"
+.include    "WriteString.s"
 
 .section    .data
 
