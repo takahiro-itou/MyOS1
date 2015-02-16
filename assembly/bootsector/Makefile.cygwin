@@ -51,7 +51,7 @@ install    :  $(BOOT_SECTOR_IMG)
 ##
 
 $(BOOT_SECTOR_IMG)  :  $(BOOT_SECTOR_IMG:%.img=%.o)
-	$(LD)  -T Binary.ls  -o $@  $^
+	$(LD)  -T $(BOOT_SECTOR_IMG:%.img=%.ls)  -o $@  $^
 
 ##
 ##    Suffix Rules.
@@ -69,5 +69,5 @@ $(BOOT_SECTOR_IMG:%.img=%.o)  :  \
         $(AS_CMN_DIR)/ReadFat12.s   \
         $(AS_CMN_DIR)/ReadFloppy.s  \
         WriteString.s  \
-        Binary.ls
+        BootSector.ls
 
