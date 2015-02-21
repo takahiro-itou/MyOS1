@@ -3,7 +3,7 @@
 ##    List of Sub Directory.
 ##
 
-SUBDIRS  =  assembly  kernel
+SUBDIRS  =  assembly  font  kernel
 
 ##
 ##    List of Files.

@@ -3,7 +3,7 @@
 ENVBLD='cygwin'
 CURDIR=`pwd`
 
-for dir in . assembly assembly/bootsector assembly/ipl kernel
+for dir in . assembly assembly/bootsector assembly/ipl font kernel
 do
     cd  ${dir}  &&  rm -f  Makefile  \
         &&  ln -s  Makefile.${ENVBLD}  Makefile
