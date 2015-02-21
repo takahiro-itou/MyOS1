@@ -14,7 +14,8 @@
 
 .equ    CODE_SEG             ,  0x0010
 .equ    DATA_SEG             ,  0x0018
-.equ    KERNEL_TEMP_ADDR     ,  0x00002000
+.equ    FONT_ASCII_ADDR      ,  0x00002000
+.equ    KERNEL_TEMP_ADDR     ,  0x00004000
 
         JMP         ENTRY_POINT
         .BYTE       0x90
@@ -58,6 +59,29 @@ ENTRY_POINT:
         CALL    ReadFile
         CALL    .SHOW_OK_MESSAGE
 
+        /*  フォントファイル読み込み。  */
+        MOV     $MSG_FIND_FONT,         %SI
+        CALL    WriteString
+
+        MOV     $LOAD_ADDR_ROOTDIR,     %SI
+        MOVW    (BPB_RootEntryCount),   %CX
+        MOV     $.FONT_ASCII_NAME,      %DI
+        CALL    FindRootDirectoryEntry
+        TEST    %SI,    %SI
+        JZ      .SHOW_ERROR
+
+        PUSH    %SI
+        CALL    .SHOW_OK_MESSAGE
+
+        MOV     $MSG_READ_FONT,         %SI
+        CALL    WriteString
+
+        POP     %SI
+        MOV     $FONT_ASCII_ADDR,       %BX
+        CALL    ReadFile
+        CALL    .SHOW_OK_MESSAGE
+
+        /*  プロテクトモードの準備。    */
         CALL    _enableA20
         MOV     $MSG_ENABLE_A20,        %SI
         CALL    WriteString
@@ -103,6 +127,8 @@ ENTRY_POINT:
 
 .KERNEL_IMAGE_NAME:
         .STRING     "KERNEL0 IMG"
+.FONT_ASCII_NAME:
+        .STRING     "ASCII   FNT"
 
 //----------------------------------------------------------------
 //
@@ -143,6 +169,10 @@ MSG_FIND_KERNEL:
         .STRING     "Find Kernel Image ..."
 MSG_READ_KERNEL:
         .STRING     "Read Kernel Image ..."
+MSG_FIND_FONT:
+        .STRING     "Find Font File ..."
+MSG_READ_FONT:
+        .STRING     "Read Font File ..."
 MSG_ENABLE_A20:
         .STRING     "Enabled A-20.\r\n"
 MSG_SETUP_GDT:
