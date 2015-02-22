@@ -66,6 +66,9 @@ $(KERNEL_0_IMG)  :  $(KERNEL_0_OBJS)
 .s.o  :
 	$(AS)  -o $@  -I $(AS_CMN_DIR)  -a=$(@:%.o=%.lst)  $<
 
+.S.o  :
+	$(CC)  -o $@  -c  -I ../include  -Wa,-a=$(@:%.o=%.lst)  $<
+
 ##
 ##
 ##

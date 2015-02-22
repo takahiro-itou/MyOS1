@@ -6,5 +6,9 @@ KERNEL_BASE  =  0x00100000;
 
 SECTIONS {
     .  =  KERNEL_BASE;
-    .text       : { *(.text) }
+    .text       : {
+        *(.entry);
+        *(.text);
+    }
 }
+
