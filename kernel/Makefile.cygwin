@@ -14,7 +14,8 @@ KERNEL_0_OBJS  =  \
 
 SYSDEV_FLOPPY    =  /proc/sys/Device/ImDisk0
 CPDEST_FLOPPY    =  /cygdrive/a
-AS_CMN_DIR       = ../assembly/common
+
+AS_CMN_DIR       =  ../assembly/common
 
 ##
 ##    Commands.
@@ -64,10 +65,10 @@ $(KERNEL_0_IMG)  :  $(KERNEL_0_OBJS)
 ##
 
 .s.o  :
-	$(AS)  -o $@  -I $(AS_CMN_DIR)  -a=$(@:%.o=%.lst)  $<
+	$(AS)  -o $@  -I $(AS_CMN_DIR)  -alm=$(@:%.o=%.lst)  $<
 
 .S.o  :
-	$(CC)  -o $@  -c  -I ../include  -Wa,-a=$(@:%.o=%.lst)  $<
+	$(CC)  -o $@  -c  -I ../include  -Wa,-alm=$(@:%.o=%.lst)  $<
 
 ##
 ##

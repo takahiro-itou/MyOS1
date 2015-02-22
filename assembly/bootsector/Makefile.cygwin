@@ -10,7 +10,8 @@ BOOT_SECTOR_IMG  =  BootSector.img
 ##
 
 SYSDEV_FLOPPY    =  /proc/sys/Device/ImDisk0
-AS_CMN_DIR       = ../common
+
+AS_CMN_DIR       =  ../common
 
 ##
 ##    Commands.
@@ -58,7 +59,10 @@ $(BOOT_SECTOR_IMG)  :  $(BOOT_SECTOR_IMG:%.img=%.o)
 ##
 
 .s.o  :
-	$(AS)  -o $@  -I $(AS_CMN_DIR)  -a=$(@:%.o=%.lst)  $<
+	$(AS)  -o $@  -I $(AS_CMN_DIR)  -alm=$(@:%.o=%.lst)  $<
+
+.S.o  :
+	$(CC)  -o $@  -c  -I ../include  -Wa,-alm=$(@:%.o=%.lst)  $<
 
 ##
 ##

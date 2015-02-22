@@ -16,6 +16,8 @@ SUBDIRS  =  bootsector  ipl
 SYSDEV_FLOPPY    =  /proc/sys/Device/ImDisk0
 CPDEST_FLOPPY    =  /cygdrive/a
 
+AS_CMN_DIR       =  common
+
 ##
 ##    Commands.
 ##
@@ -51,13 +53,15 @@ $(SUBDIRS)  :  RECURSIVE
 ##    Build.
 ##
 
-
 ##
 ##    Suffix Rules.
 ##
 
 .s.o  :
-	$(AS)  -o $@  -a=$(@:%.o=%.lst)  $<
+	$(AS)  -o $@  -I $(AS_CMN_DIR)  -a=$(@:%.o=%.lst)  $<
+
+.S.o  :
+	$(CC)  -o $@  -c  -I ../include  -Wa,-a=$(@:%.o=%.lst)  $<
 
 ##
 ##
