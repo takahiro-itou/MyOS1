@@ -16,6 +16,7 @@ SYSDEV_FLOPPY    =  /proc/sys/Device/ImDisk0
 CPDEST_FLOPPY    =  /cygdrive/a
 
 AS_CMN_DIR       =  ../assembly/common
+CPP_INCLUDE_DIR  =  ../include
 
 ##
 ##    Commands.
@@ -24,6 +25,7 @@ AS_CMN_DIR       =  ../assembly/common
 AS      =  /usr/bin/i686-pc-linux-gnu-as
 CC      =  /usr/bin/i686-pc-linux-gnu-gcc
 LD      =  /usr/bin/i686-pc-linux-gnu-ld
+
 CP      =  cp
 DD      =  dd
 
@@ -31,8 +33,8 @@ DD      =  dd
 ##    Targets.
 ##
 
-.PHONY     :  all  clean  cleanall  cleanobj  install
-.SUFFIXES  :  .o  .s
+.PHONY     :  all  clean  cleanall  cleanobj  disasm  install
+.SUFFIXES  :  .o  .s  .S
 
 all        :  $(KERNEL_0_IMG)
 
@@ -52,6 +54,13 @@ install    :  $(KERNEL_0_IMG)
 	$(CP)  -pv  $^  $(CPDEST_FLOPPY)/
 
 ##
+##    Compile and Link Flags.
+##
+
+ASFLAGS   =  -I $(AS_CMN_DIR)
+CCFLAGS   =  -c  -I $(AS_CMN_DIR)  -I $(CPP_INCLUDE_DIR)
+
+##
 ##    Build.
 ##
 
@@ -65,10 +74,10 @@ $(KERNEL_0_IMG)  :  $(KERNEL_0_OBJS)
 ##
 
 .s.o  :
-	$(AS)  -o $@  -I $(AS_CMN_DIR)  -alm=$(@:%.o=%.lst)  $<
+	$(AS)  -o $@  $(ASFLAGS)      -alm=$(@:%.o=%.lst)  $<
 
 .S.o  :
-	$(CC)  -o $@  -c  -I ../include  -Wa,-alm=$(@:%.o=%.lst)  $<
+	$(CC)  -o $@  $(CCFLAGS)  -Wa,-alm=$(@:%.o=%.lst)  $<
 
 ##
 ##

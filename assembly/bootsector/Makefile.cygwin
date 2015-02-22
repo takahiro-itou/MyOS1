@@ -12,13 +12,16 @@ BOOT_SECTOR_IMG  =  BootSector.img
 SYSDEV_FLOPPY    =  /proc/sys/Device/ImDisk0
 
 AS_CMN_DIR       =  ../common
+CPP_INCLUDE_DIR  =  ../../include
 
 ##
 ##    Commands.
 ##
 
 AS      =  /usr/bin/i686-pc-linux-gnu-as
+CC      =  /usr/bin/i686-pc-linux-gnu-gcc
 LD      =  /usr/bin/i686-pc-linux-gnu-ld
+
 CP      =  cp
 DD      =  dd
 DISASM  =  objdump
@@ -28,7 +31,7 @@ DISASM  =  objdump
 ##
 
 .PHONY     :  all  clean  cleanall  cleanobj  disasm  install
-.SUFFIXES  :  .o  .s
+.SUFFIXES  :  .o  .s  .S
 
 all        :  $(BOOT_SECTOR_IMG)
 
@@ -46,6 +49,12 @@ disasm     :
 install    :  $(BOOT_SECTOR_IMG)
 	$(DD)  if=$(BOOT_SECTOR_IMG)  bs=512  count=1  of=$(SYSDEV_FLOPPY)
 
+##
+##    Compile and Link Flags.
+##
+
+ASFLAGS   =  -I $(AS_CMN_DIR)
+CCFLAGS   =  -c  -I $(AS_CMN_DIR)  -I $(CPP_INCLUDE_DIR)
 
 ##
 ##    Build.
@@ -59,10 +68,10 @@ $(BOOT_SECTOR_IMG)  :  $(BOOT_SECTOR_IMG:%.img=%.o)
 ##
 
 .s.o  :
-	$(AS)  -o $@  -I $(AS_CMN_DIR)  -alm=$(@:%.o=%.lst)  $<
+	$(AS)  -o $@  $(ASFLAGS)      -alm=$(@:%.o=%.lst)  $<
 
 .S.o  :
-	$(CC)  -o $@  -c  -I ../include  -Wa,-alm=$(@:%.o=%.lst)  $<
+	$(CC)  -o $@  $(CCFLAGS)  -Wa,-alm=$(@:%.o=%.lst)  $<
 
 ##
 ##
