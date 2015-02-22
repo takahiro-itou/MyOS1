@@ -15,6 +15,7 @@
         .global     _startProtet32
 
 .equ    CODE_SEG             ,  0x0010
+.equ    FONT_ASCII_ADDR      ,  0x00002000
 .equ    KERNEL_TEMP_ADDR     ,  0x00004000
 .equ    KERNEL_BASE_ADDR     ,  0x00100000
 

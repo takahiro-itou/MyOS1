@@ -81,19 +81,16 @@ ENTRY_POINT:
         CALL    ReadFile
         CALL    .SHOW_OK_MESSAGE
 
+        /*  ディスプレイモードの設定。  */
+        MOV     $0x0013,    %AX
+        INT     $0x10
+
         /*  プロテクトモードの準備。    */
         CALL    _enableA20
-        MOV     $MSG_ENABLE_A20,        %SI
-        CALL    WriteString
 
         CLI
 
         CALL    _setupGDT
-        MOV     $MSG_SETUP_GDT,         %SI
-        CALL    WriteString
-
-        MOV     $MSG_PROTECT_START,     %SI
-        CALL    WriteString
 
         MOV     %CR0,   %EAX
         OR      $0x01,  %EAX
@@ -173,9 +170,3 @@ MSG_FIND_FONT:
         .STRING     "Find Font File ..."
 MSG_READ_FONT:
         .STRING     "Read Font File ..."
-MSG_ENABLE_A20:
-        .STRING     "Enabled A-20.\r\n"
-MSG_SETUP_GDT:
-        .STRING     "Maked Global Descriptor Table.\r\n"
-MSG_PROTECT_START:
-        .STRING     "Start Protect Mode ...\r\n"
