@@ -84,8 +84,3 @@ $(BOOT_SECTOR_IMG:%.img=%.o)  :  \
         $(AS_CMN_DIR)/WriteString.s  \
         BootSector.ls
 
-##  ファイル名変更作業のためのダミー
-BootSector.o  :  BootSector.old.s
-	$(AS)  -o $@  $(ASFLAGS)      -alm=$(@:%.o=%.lst)  $<
-
-

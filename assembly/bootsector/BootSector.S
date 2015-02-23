@@ -1,15 +1,21 @@
 //  -*-  coding: utf-8; mode: asm  -*-  //
 /*************************************************************************
 **                                                                      **
-**          BootSector.s                                                **
+**                      --  My Operating System --                      **
 **                                                                      **
 **          Copyright (C), 2015-2015, Takahiro Itou                     **
 **          All Rights Reserved.                                        **
 **                                                                      **
 *************************************************************************/
 
-        .CODE16
-        .ORG    0x0000
+/**
+**      ブートセクタ。
+**
+**      @file   assembly/bootsector/BootSector.S
+**/
+
+        .code16
+        .org    0x0000
 
 .section    .text
 
@@ -21,8 +27,8 @@
 //      BPB (Bios Parameter Block).
 //
 
-        JMP         ENTRY_POINT
-        .BYTE       0x90
+        jmp         ENTRY_POINT
+        .byte       0x90
 
 .include    "Fat12Bpb.inc"
 
@@ -34,59 +40,59 @@
 //
 
 ENTRY_POINT:
-        XOR     %AX,        %AX
-        MOV     %AX,        %SS
-        MOV     $0x7C00,    %SP
-        MOV     %AX,        %DS
-        MOV     %AX,        %ES
+        xorw    %ax,  %ax
+        movw    %ax,  %ss
+        movw    $0x7C00,  %sp
+        movw    %ax,  %ds
+        movw    %ax,  %es
 
         /*  ファイルアロケーションテーブルを読み込み。  */
-        MOVW    (BPB_SizeOfFAT),        %AX
-        MULB    (BPB_NumberOfFATs)
-        MOV     %AX,    %CX     /*  読み込むセクタ数。  */
-        MOVW    (BPB_RsvdSectorCount),  %SI
-        MOV     $LOAD_ADDR_FAT,         %BX
-        CALL    ReadSectors
+        movw    (BPB_SizeOfFAT),  %ax
+        mulb    (BPB_NumberOfFATs)
+        movw    %ax,  %cx       /*  読み込むセクタ数。  */
+        movw    (BPB_RsvdSectorCount),  %si
+        movw    $LOAD_ADDR_FAT,   %bx
+        call    ReadSectors
 
-        MOV     $0x0020,                %AX
-        MULW    (BPB_RootEntryCount)
-        ADDW    (BPB_BytesPerSector),   %AX
-        DEC     %AX
-        DIVW    (BPB_BytesPerSector)
-        MOV     %AX,    %CX     /*  読み込むセクタ数。  */
-        MOV     $LOAD_ADDR_ROOTDIR,     %BX
-        CALL    ReadSectors
+        movw    $0x0020,  %ax
+        mulw    (BPB_RootEntryCount)
+        addw    (BPB_BytesPerSector),  %ax
+        dec     %ax
+        divw    (BPB_BytesPerSector)
+        movw    %ax,  %cx       /*  読み込むセクタ数。  */
+        movw    $LOAD_ADDR_ROOTDIR,    %bx
+        call    ReadSectors
 
         /*  この時点で SI レジスタに、          **
         **  データ領域の先頭セクタ番号が入る。  **
         **  後で使うので、保存しておく。        */
-        MOVW    %SI,        %BP
+        movw    %si,  %bp
 
         /*  ファイルシステムの解析。    */
-        MOV     $LOAD_ADDR_ROOTDIR,     %SI
-        MOVW    (BPB_RootEntryCount),   %CX
-        MOV     $.IPL_IMAGE_NAME,       %DI
-        CALL    FindRootDirectoryEntry
-        TEST    %SI,        %SI
-        JZ      .LOAD_FAILURE
+        movw    $LOAD_ADDR_ROOTDIR,    %si
+        movw    (BPB_RootEntryCount),  %cx
+        movw    $.IPL_IMAGE_NAME,      %di
+        call    FindRootDirectoryEntry
+        test    %si,  %si
+        jz      .LOAD_FAILURE
 
-        MOV     $0x1000,    %BX
-        CALL    ReadFile
-        CMP     $0x1000,    %AX     /*  IPL は 4 KB 以内。  */
-        JA      .IPL_SIZE_ERROR
-        JMP     * %BX
+        movw    $0x1000,  %bx
+        call    ReadFile
+        cmpw    $0x1000,  %ax       /*  IPL は 4 KB 以内。  */
+        ja      .IPL_SIZE_ERROR
+        jmp     * %bx
 
 .LOAD_FAILURE:
-        MOV     $.MSG_FILE_NOT_FOUND,   %SI
-        CALL    WriteString
-        JMP     .HALT_LOOP
+        movw    $.MSG_FILE_NOT_FOUND,   %si
+        call    WriteString
+        jmp     .HALT_LOOP
 .IPL_SIZE_ERROR:
-        MOV     $.MSG_IPL_TOO_LARGE,    %SI
-        CALL    WriteString
-        JMP     .HALT_LOOP
+        movw    $.MSG_IPL_TOO_LARGE,    %si
+        call    WriteString
+        jmp     .HALT_LOOP
 .HALT_LOOP:
-        HLT
-        JMP     .HALT_LOOP
+        hlt
+        jmp     .HALT_LOOP
 
 .MSG_FILE_NOT_FOUND:
         .STRING     "IPL Not Found."
