@@ -97,7 +97,9 @@ InstallFiles  :  $(IPL_BIN)
 ##
 ##
 
-IplStart.o   :  Makefile  IplStart.s
+IplStart.o   :  Makefile  IplStart.s  \
+        $(AS_CMN_DIR)/FloppyDisk.S
+
 StartMain.o  :  Makefile  IplStart.s  \
         ../common/Console.s
 
