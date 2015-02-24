@@ -14,13 +14,12 @@
 **      @file   assembly/bootsector/BootSector.S
 **/
 
+#include    "MemoryMap.h"
+
         .code16
         .org    0x0000
 
 .section    .text
-
-.equ    LOAD_ADDR_FAT        ,  0x7E00
-.equ    LOAD_ADDR_ROOTDIR    ,  0xA200
 
 //----------------------------------------------------------------
 //
@@ -30,7 +29,7 @@
         jmp         ENTRY_POINT
         .byte       0x90
 
-.include    "Fat12Bpb.inc"
+#include    "Fat12Bpb.inc"
 
         .space      0x12,   0x00
 
@@ -106,18 +105,18 @@ ENTRY_POINT:
 //      フロッピーディスク読み込み関連。
 //
 
-.include    "FloppyDisk.S"
+#include    "FloppyDisk.S"
 
 //----------------------------------------------------------------
 //
 //      ファイルシステム解析関連。
 //
 
-.include    "FileSystemFat12.S"
+#include    "FileSystemFat12.S"
 
 //----------------------------------------------------------------
 //
 //      文字列表示関連。
 //
 
-.include    "WriteString.s"
+#include    "WriteString.s"
