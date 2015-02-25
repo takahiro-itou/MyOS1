@@ -146,7 +146,7 @@ ENTRY_POINT:
 //      文字列表示関連。
 //
 
-.include    "WriteString.s"
+.include    "WriteString16.S"
 
 .section    .data
 
