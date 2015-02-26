@@ -5,9 +5,9 @@
 
 IPL_BIN          =  IplF12.bin
 IPL_BIN_OBJS     =  \
-        IplStart.o   \
-        EnableA20.o  \
-        SetupGdt.o   \
+        EntryPoint.o  \
+        EnableA20.o   \
+        SetupGdt.o    \
         StartMain.o
 
 ##
@@ -97,7 +97,7 @@ InstallFiles  :  $(IPL_BIN)
 ##
 ##
 
-IplStart.o   :  Makefile  \
+EntryPoint.o  :  Makefile  \
         $(AS_CMN_DIR)/FileSystemFat12.S  \
         $(AS_CMN_DIR)/FloppyDisk.S       \
         $(AS_CMN_DIR)/WriteString16.S    \

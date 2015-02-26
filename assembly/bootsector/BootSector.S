@@ -56,7 +56,7 @@ ENTRY_POINT:
         movw    $0x0020,  %ax
         mulw    (BPB_RootEntryCount)
         addw    (BPB_BytesPerSector),  %ax
-        dec     %ax
+        decw    %ax
         divw    (BPB_BytesPerSector)
         movw    %ax,  %cx       /*  読み込むセクタ数。  */
         movw    $LOAD_ADDR_ROOTDIR,    %bx
@@ -72,7 +72,7 @@ ENTRY_POINT:
         movw    (BPB_RootEntryCount),  %cx
         movw    $.IPL_IMAGE_NAME,      %di
         call    FindRootDirectoryEntry
-        test    %si,  %si
+        testw   %si,  %si
         jz      .LOAD_FAILURE
 
         movw    $0x1000,  %bx
@@ -94,11 +94,11 @@ ENTRY_POINT:
         jmp     .HALT_LOOP
 
 .MSG_FILE_NOT_FOUND:
-        .STRING     "IPL Not Found."
+        .string     "IPL Not Found."
 .MSG_IPL_TOO_LARGE:
-        .STRING     "FATAL: IPL Too Large"
+        .string     "FATAL: IPL Too Large"
 .IPL_IMAGE_NAME:
-        .STRING     "IPLF12  BIN"
+        .string     "IPLF12  BIN"
 
 //----------------------------------------------------------------
 //
