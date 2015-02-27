@@ -14,14 +14,14 @@
 **      @file   assembly/ipl/EntryPoint.S
 **/
 
+#include    "MemoryMap.h"
+
         .code16
 
 .section    .text
 
 .equ    CODE_SEG             ,  0x0010
 .equ    DATA_SEG             ,  0x0018
-.equ    FONT_ASCII_ADDR      ,  0x00002000
-.equ    KERNEL_TEMP_ADDR     ,  0x00004000
 
         jmp         ENTRY_POINT
         .byte       0x90
