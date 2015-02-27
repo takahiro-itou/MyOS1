@@ -6,7 +6,6 @@
 IPL_BIN          =  IplF12.bin
 IPL_BIN_OBJS     =  \
         EntryPoint.o   \
-        EnableA20.o    \
         ProtectMode.o  \
         StartMain.o
 

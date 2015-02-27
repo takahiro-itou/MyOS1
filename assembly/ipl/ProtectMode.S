@@ -16,11 +16,97 @@
 
         .code16
 
+        .global     _enableA20
         .global     _setupGDT
 
 //========================================================================
 
 .section    .text
+
+//----------------------------------------------------------------
+/**   アドレスバスの A-20 制限を解除する。
+**
+**  @return     無し。
+**/
+
+_enableA20:
+        //
+        //  割り込みを禁止する。
+        //
+        cli
+
+        //
+        //  キーボードを無効化する。
+        //
+        call    WaitKbdCommandComplete
+        movb    $0xAD,  %al
+        outb    %al,    $0x64
+        call    WaitKbdCommandComplete
+
+        //
+        //  アウトプットポートの現在の値を取得する。
+        //
+        movb    $0xD0,  %al
+        outb    %al,    $0x64
+        call    WaitKbdArriveData
+        inb     $0x60,  %al
+
+        //
+        //  Bit 1 : A20 を有効。
+        //
+        orb     $0x02,  %al
+        pushw   %ax
+
+        //
+        //  アウトプットポートに新しい値を書き込む。
+        //
+        call    WaitKbdCommandComplete
+        movb    $0xD1,  %al
+        outb    %al,    $0x64
+        call    WaitKbdCommandComplete
+
+        popw    %ax
+        outb    %al,    $0x60
+        call    WaitKbdCommandComplete
+
+        //
+        //  キーボードを有効化する。
+        //
+        movb    $0xAE,  %al
+        outb    %al,    $0x64
+        call    WaitKbdCommandComplete
+
+        //
+        //  割り込みを許可する。
+        //
+        sti
+        ret
+
+//----------------------------------------------------------------
+/**   アウトプットバッファにデータが到着するのを待つ。
+**
+**  @return     無し。
+**  @attention  破壊されるレジスタ：ax
+**/
+
+WaitKbdArriveData:
+        inb     $0x64,  %al
+        testb   $0x01,  %al
+        jz      WaitKbdArriveData
+        ret
+
+//----------------------------------------------------------------
+/**   送信したコマンドが完了するのを待つ。
+**
+**  @return     無し。
+**  @attention  破壊されるレジスタ：ax
+**/
+
+WaitKbdCommandComplete:
+        inb     $0x64,  %al
+        testb   $0x02,  %al
+        jnz     WaitKbdCommandComplete
+        ret
 
 //----------------------------------------------------------------
 /**   GDT をセットアップする。
