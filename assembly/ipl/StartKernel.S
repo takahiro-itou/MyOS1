@@ -120,7 +120,7 @@ _checkEnableA20:
         popl    %ecx
         ret
 
-#include    "Console.s"
+#include    "Console32.S"
 
 //----------------------------------------------------------------
 //

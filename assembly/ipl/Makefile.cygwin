@@ -103,6 +103,6 @@ EntryPoint.o  :  Makefile  \
         Ipl.ls
 
 StartMain.o  :  Makefile  \
-        $(AS_CMN_DIR)/Console.s  \
+        $(AS_CMN_DIR)/Console32.S  \
         Ipl.ls
 
