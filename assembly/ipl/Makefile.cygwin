@@ -97,9 +97,10 @@ InstallFiles  :  $(IPL_BIN)
 ##
 
 EntryPoint.o  :  Makefile  \
-        $(AS_CMN_DIR)/FileSystemFat12.S  \
-        $(AS_CMN_DIR)/FloppyDisk.S       \
-        $(AS_CMN_DIR)/WriteString16.S    \
+        $(AS_CMN_DIR)/FileSystemFat12.S   \
+        $(AS_CMN_DIR)/FloppyDisk.S        \
+        $(AS_CMN_DIR)/WriteString16.S     \
+        $(CPP_INCLUDE_DIR)/Descriptors.h  \
         Ipl.ls
 
 StartMain.o  :  Makefile  \

@@ -86,3 +86,7 @@ $(KERNEL_0_IMG)  :  $(KERNEL_0_OBJS)
 $(KERNEL_0_IMG:%.img=%.o)  :  \
         Kernel0.ls
 
+KernelEntry.o  :  Makefile
+KernelMain.o  :  Makefile  \
+        $(CPP_INCLUDE_DIR)/Descriptors.h
+
