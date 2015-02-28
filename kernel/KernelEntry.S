@@ -18,7 +18,7 @@
 
 start:
 _start:
-        JMP     ENTRY_POINT
+        jmp     ENTRY_POINT
 
 //----------------------------------------------------------------
 
@@ -33,11 +33,11 @@ _start:
 //
 
 ENTRY_POINT:
-        PUSH    %EBX
-        PUSH    %EAX
+        pushl   %ebx
+        pushl   %eax
         CALL    startKernel
 
 .HALT_LOOP:
-        HLT
-        JMP     .HALT_LOOP
+        hlt
+        jmp     .HALT_LOOP
 

@@ -10,14 +10,18 @@ BOOT_SECTOR_IMG  =  BootSector.img
 ##
 
 SYSDEV_FLOPPY    =  /proc/sys/Device/ImDisk0
-AS_CMN_DIR       = ../common
+
+AS_CMN_DIR       =  ../common
+CPP_INCLUDE_DIR  =  ../../include
 
 ##
 ##    Commands.
 ##
 
 AS      =  /usr/bin/i686-pc-linux-gnu-as
+CC      =  /usr/bin/i686-pc-linux-gnu-gcc
 LD      =  /usr/bin/i686-pc-linux-gnu-ld
+
 CP      =  cp
 DD      =  dd
 DISASM  =  objdump
@@ -27,7 +31,7 @@ DISASM  =  objdump
 ##
 
 .PHONY     :  all  clean  cleanall  cleanobj  disasm  install
-.SUFFIXES  :  .o  .s
+.SUFFIXES  :  .o  .s  .S
 
 all        :  $(BOOT_SECTOR_IMG)
 
@@ -45,6 +49,12 @@ disasm     :
 install    :  $(BOOT_SECTOR_IMG)
 	$(DD)  if=$(BOOT_SECTOR_IMG)  bs=512  count=1  of=$(SYSDEV_FLOPPY)
 
+##
+##    Compile and Link Flags.
+##
+
+ASFLAGS   =  -I $(AS_CMN_DIR)
+CCFLAGS   =  -c  -I $(AS_CMN_DIR)  -I $(CPP_INCLUDE_DIR)
 
 ##
 ##    Build.
@@ -58,16 +68,19 @@ $(BOOT_SECTOR_IMG)  :  $(BOOT_SECTOR_IMG:%.img=%.o)
 ##
 
 .s.o  :
-	$(AS)  -o $@  -I $(AS_CMN_DIR)  -a=$(@:%.o=%.lst)  $<
+	$(AS)  -o $@  $(ASFLAGS)      -alm=$(@:%.o=%.lst)  $<
+
+.S.o  :
+	$(CC)  -o $@  $(CCFLAGS)  -Wa,-alm=$(@:%.o=%.lst)  $<
 
 ##
 ##
 ##
 
 $(BOOT_SECTOR_IMG:%.img=%.o)  :  \
-        $(AS_CMN_DIR)/Fat12Bpb.inc   \
-        $(AS_CMN_DIR)/ReadFat12.s    \
-        $(AS_CMN_DIR)/ReadFloppy.s   \
-        $(AS_CMN_DIR)/WriteString.s  \
+        $(AS_CMN_DIR)/Fat12Bpb.inc       \
+        $(AS_CMN_DIR)/FileSystemFat12.S  \
+        $(AS_CMN_DIR)/FloppyDisk.S       \
+        $(AS_CMN_DIR)/WriteString16.S    \
         BootSector.ls
 
