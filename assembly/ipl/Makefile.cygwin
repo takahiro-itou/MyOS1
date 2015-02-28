@@ -7,7 +7,7 @@ IPL_BIN          =  IplF12.bin
 IPL_BIN_OBJS     =  \
         EntryPoint.o   \
         ProtectMode.o  \
-        StartMain.o
+        StartKernel.o
 
 ##
 ##    Environments.
