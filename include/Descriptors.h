@@ -41,4 +41,10 @@
         | (present << 7) | (dpl << 5) | (sys << 4) )
 
 
+#if !defined( MYOS1_INCLUDE_FROM_ASM )
+
+void    _setupGDT(void);
+void    _setupIDT(void);
+
+#endif  //  if !defined( MYOS1_INCLUDE_FROM_ASM )
 #endif

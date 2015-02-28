@@ -29,6 +29,12 @@ _setupGDT:
         lgdt    (GDT_POINT)
         ret
 
+//========================================================================
+//
+//      テーブル本体。
+//
+
+#define     MYOS1_INCLUDE_FROM_ASM      1
 #include    "Descriptors.h"
 
         /**         FLAGS:                     G, DB, 64, AV, P, LV, S */
