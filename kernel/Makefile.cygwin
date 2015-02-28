@@ -5,8 +5,9 @@
 
 KERNEL_0_IMG   =  Kernel0.img
 KERNEL_0_OBJS  =  \
-        KernelEntry.o  \
-        KernelMain.o
+        KernelEntry.o     \
+        KernelMain.o      \
+        SetupSegment.o
 
 ##
 ##    Environments.

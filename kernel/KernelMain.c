@@ -8,6 +8,13 @@
 **                                                                      **
 *************************************************************************/
 
+void  _setupGDT();
+
+void  setupDescriptors()
+{
+    _setupGDT();
+}
+
 void  startKernel()
 {
     int     i, j;
