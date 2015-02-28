@@ -46,6 +46,11 @@
 /**
 **    カーネルを壱時的にロードしておくアドレス。
 **/
-#define     KERNEL_TEMP_ADDR        0x00004000
+#define     KERNEL0_TEMP_ADDR       0x00004000
+
+/**
+**    カーネルをロードするアドレス。
+**/
+#define     KERNEL0_BASE_ADDR       0x00100000
 
 #endif

@@ -61,7 +61,7 @@ ENTRY_POINT:
         call    WriteString
 
         popw    %si
-        movw    $KERNEL_TEMP_ADDR,  %bx
+        movw    $KERNEL0_TEMP_ADDR,  %bx
         call    ReadFile
         call    .SHOW_OK_MESSAGE
 

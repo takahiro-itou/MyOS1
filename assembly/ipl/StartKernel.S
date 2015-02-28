@@ -23,7 +23,6 @@
         .global     _startProtet32
 
 .equ    CODE_SEG             ,  0x0010
-.equ    KERNEL_BASE_ADDR     ,  0x00100000
 
 //----------------------------------------------------------------
 //
@@ -49,8 +48,8 @@ _startProtet32:
         call    writeText
 
         cld
-        movl    $KERNEL_TEMP_ADDR,  %esi
-        movl    $KERNEL_BASE_ADDR,  %edi
+        movl    $KERNEL0_TEMP_ADDR,  %esi
+        movl    $KERNEL0_BASE_ADDR,  %edi
         movl    $512,   %ecx    /*  ダミー。    */
         shrl    $2,     %ecx
         rep     movsd
@@ -58,7 +57,7 @@ _startProtet32:
         call    .SHOW_OK_MESSAGE
 
         /*  読み込んだカーネルへジャンプ。  */
-        ljmp    $CODE_SEG , $KERNEL_BASE_ADDR
+        ljmp    $CODE_SEG , $KERNEL0_BASE_ADDR
 
 .SHOW_ERROR_MESSAGE:
         movb    $0x0C,  %ah
