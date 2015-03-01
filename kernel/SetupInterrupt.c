@@ -48,11 +48,19 @@ setGateDesc(
 
 //----------------------------------------------------------------
 
+#define     INTGATE32_FLAGS     INT_GATE_FLAGS(1, 0, 1)
+void  _asm_int_21_handler(void);
+void  _asm_int_2c_handler(void);
+
 void  setupIDT(void)
 {
     int i;
     for ( i = 0; i < 256; ++ i ) {
         setGateDesc(i, 0, 0, 0);
     }
+
+    setGateDesc(0x21, (int)(_asm_int_21_handler), 0x10, INTGATE32_FLAGS);
+    setGateDesc(0x2c, (int)(_asm_int_2c_handler), 0x10, INTGATE32_FLAGS);
+
     __asm__ __volatile__ ( "lidt    (_IDT_POINT)");
 }
