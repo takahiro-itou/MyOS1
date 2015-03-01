@@ -1,14 +1,20 @@
 //  -*-  coding: utf-8; mode: c++  -*-  //
 /*************************************************************************
 **                                                                      **
-**          KernelMain.c                                                **
+**                      --  My Operating System --                      **
 **                                                                      **
 **          Copyright (C), 2015-2015, Takahiro Itou                     **
 **          All Rights Reserved.                                        **
 **                                                                      **
 *************************************************************************/
 
-void  _setupGDT();
+/**
+**      カーネルの定義。
+**
+**      @file   kernel/KernelMain.c
+**/
+
+#include    "Descriptors.h"
 
 void  setupDescriptors()
 {

@@ -5,8 +5,8 @@
 
 KERNEL_0_IMG   =  Kernel0.img
 KERNEL_0_OBJS  =  \
-        KernelEntry.o     \
-        KernelMain.o      \
+        KernelEntry.o        \
+        KernelMain.o         \
         SetupSegment.o
 
 ##
@@ -59,7 +59,8 @@ install    :  $(KERNEL_0_IMG)
 ##
 
 ASFLAGS   =  -I $(AS_CMN_DIR)
-CCFLAGS   =  -c  -I $(AS_CMN_DIR)  -I $(CPP_INCLUDE_DIR)
+CFLAGS    =  -I $(AS_CMN_DIR)  -I $(CPP_INCLUDE_DIR)
+CCFLAGS   =  -I $(AS_CMN_DIR)  -I $(CPP_INCLUDE_DIR)
 
 ##
 ##    Build.
@@ -75,10 +76,10 @@ $(KERNEL_0_IMG)  :  $(KERNEL_0_OBJS)
 ##
 
 .s.o  :
-	$(AS)  -o $@  $(ASFLAGS)      -alm=$(@:%.o=%.lst)  $<
+	$(AS)  -o $@  $(ASFLAGS)      -alm=$(@:%.o=%.lst)      $<
 
 .S.o  :
-	$(CC)  -o $@  $(CCFLAGS)  -Wa,-alm=$(@:%.o=%.lst)  $<
+	$(CC)  -o $@  $(CCFLAGS)  -Wa,-alm=$(@:%.o=%.lst)  -c  $<
 
 ##
 ##
