@@ -7,6 +7,9 @@ KERNEL_0_IMG   =  Kernel0.img
 KERNEL_0_OBJS  =  \
         KernelEntry.o        \
         KernelMain.o         \
+        InterruptEntries.o   \
+        InterruptHandlers.o  \
+        SetupInterrupt.o     \
         SetupSegment.o
 
 ##
@@ -74,6 +77,9 @@ $(KERNEL_0_IMG)  :  $(KERNEL_0_OBJS)
 ##
 ##    Suffix Rules.
 ##
+
+.c.o  :
+	$(CC)  -o $@  $(CFLAGS)   -Wa,-alm=$(@:%.o=%.lst)  -c  $<
 
 .s.o  :
 	$(AS)  -o $@  $(ASFLAGS)      -alm=$(@:%.o=%.lst)      $<
