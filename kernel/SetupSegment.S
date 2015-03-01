@@ -17,6 +17,7 @@
         .code32
 
         .global     _setupGDT
+        .global     _IDT_POINT
 
 //----------------------------------------------------------------
 /**   GDT をセットアップする。
@@ -36,6 +37,7 @@ _setupGDT:
 
 #define     MYOS1_INCLUDE_FROM_ASM      1
 #include    "Descriptors.h"
+#include    "MemoryMap.h"
 
         /**         FLAGS:                     G, DB, 64, AV, P, LV, S */
 #define     GDT_KERNEL_32   GDT_COMBINE_FLAGS( 1,  1,  0,  0, 1, 00, 1)
@@ -45,8 +47,16 @@ _setupGDT:
 #define     GDT_CS      0x0A
 
 GDT_POINT:
-        .word   .GDT_END - .GDT_ENTRY
+        .align  8
+        .word   .GDT_END - .GDT_ENTRY - 1
         .long   .GDT_ENTRY
+
+        .align  8
+_IDT_POINT:
+_IDT_POINT_LIMIT:
+        .word   256 * 8 - 1
+_IDT_POINT_BASE:
+        .long   INTGATE_DESCRIPTOR_ADDR
 
         .align  32
 
@@ -65,6 +75,6 @@ GDT_POINT:
         //  Segments.   //
         SET_GDT_ENTRY( GDT_KERNEL_32,  GDT_CS, 0x00000000, 0xFFFFFFFF )
         SET_GDT_ENTRY( GDT_KERNEL_32,  GDT_DS, 0x00000000, 0xFFFFFFFF )
-        SET_GDT_ENTRY( GDT_KERNEL_64,  GDT_CS, 0x00000000, 0xFFFFFFFF )
-        SET_GDT_ENTRY( GDT_KERNEL_64,  GDT_DS, 0x00000000, 0xFFFFFFFF )
+//        SET_GDT_ENTRY( GDT_KERNEL_64,  GDT_CS, 0x00000000, 0xFFFFFFFF )
+//        SET_GDT_ENTRY( GDT_KERNEL_64,  GDT_DS, 0x00000000, 0xFFFFFFFF )
 .GDT_END:
