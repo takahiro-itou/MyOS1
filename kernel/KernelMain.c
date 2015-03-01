@@ -31,5 +31,7 @@ void  startKernel()
         ptrVRAM[i]  = 15;
     }
 
-    return;
+halt_loop:
+    __asm__ __volatile__ ( "hlt" );
+    goto    halt_loop;
 }
