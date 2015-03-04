@@ -1,0 +1,97 @@
+
+##
+##    List of Files.
+##
+
+KERNEL_0_IMG   =  Kernel0.img
+KERNEL_0_OBJS  =  \
+        KernelEntry.o        \
+        KernelMain.o         \
+        InterruptEntries.o   \
+        InterruptHandlers.o  \
+        SetupInterrupt.o     \
+        SetupSegment.o
+
+##
+##    Environments.
+##
+
+SYSDEV_FLOPPY    =  /proc/sys/Device/ImDisk0
+CPDEST_FLOPPY    =  /cygdrive/a
+
+CPP_INCLUDE_DIR  =  ../../include
+
+##
+##    Commands.
+##
+
+AS      =  /usr/bin/i686-pc-linux-gnu-as
+CC      =  /usr/bin/i686-pc-linux-gnu-gcc
+CCAS    =  /usr/bin/i686-pc-linux-gnu-gcc
+LD      =  /usr/bin/i686-pc-linux-gnu-ld
+
+CP      =  cp
+DD      =  dd
+
+##
+##    Targets.
+##
+
+.PHONY     :  all  clean  cleanall  cleanobj  disasm  install
+.SUFFIXES  :  .o  .s  .S
+
+all        :  $(KERNEL_0_IMG)
+
+clean      :  cleanobj
+	$(RM)  $(KERNEL_0_IMG)
+
+cleanall   :  clean
+	$(RM)  $(KERNEL_0_IMG:%.img=%.map)
+	$(RM)  $(KERNEL_0_OBJS:%.o=%.lst)
+
+cleanobj   :
+	$(RM)  $(KERNEL_0_OBJS)
+
+disasm     :
+
+install    :  $(KERNEL_0_IMG)
+	$(CP)  -pv  $^  $(CPDEST_FLOPPY)/
+
+##
+##    Compile and Link Flags.
+##
+
+ASFLAGS    =
+CFLAGS     =  -I $(CPP_INCLUDE_DIR)
+CCASFLAGS  =  -I $(CPP_INCLUDE_DIR)
+
+##
+##    Build.
+##
+
+$(KERNEL_0_IMG)  :  $(KERNEL_0_OBJS)
+	$(LD)  -Map $(KERNEL_0_IMG:%.img=%.map)  \
+        -T LinkerScript  -nostdlib           \
+        -o $@  $(KERNEL_0_OBJS)
+
+##
+##    Suffix Rules.
+##
+
+.c.o  :
+	$(CC)    -o $@  $(CFLAGS)     -Wa,-alm=$(@:%.o=%.lst)  -c  $<
+
+.S.o  :
+	$(CCAS)  -o $@  $(CCASFLAGS)  -Wa,-alm=$(@:%.o=%.lst)  -c  $<
+
+##
+##
+##
+
+$(KERNEL_0_IMG:%.img=%.o)  :  \
+        LinkerScript
+
+KernelEntry.o  :  Makefile
+KernelMain.o  :  Makefile  \
+        $(CPP_INCLUDE_DIR)/Descriptors.h
+
