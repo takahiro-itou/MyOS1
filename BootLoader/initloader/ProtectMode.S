@@ -11,7 +11,7 @@
 /**
 **      プロテクモードへの移行。
 **
-**      @file   assembly/ipl/ProtectMode.S
+**      @file   initloader/ProtectMode.S
 **/
 
         .code16

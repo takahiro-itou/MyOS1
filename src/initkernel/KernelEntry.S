@@ -1,16 +1,22 @@
 //  -*-  coding: utf-8; mode: asm  -*-  //
 /*************************************************************************
 **                                                                      **
-**          KernelEntry.s                                               **
+**                      --  My Operating System --                      **
 **                                                                      **
 **          Copyright (C), 2015-2015, Takahiro Itou                     **
 **          All Rights Reserved.                                        **
 **                                                                      **
 *************************************************************************/
 
+/**
+**      エントリポイント。
+**
+**      @file   initkernel/SetupSegment.S
+**/
+
 #include    "BootInfo.h"
 
-        .CODE32
+        .code32
 
 .section    .entry
 

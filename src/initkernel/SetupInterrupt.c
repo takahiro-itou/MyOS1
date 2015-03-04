@@ -11,7 +11,7 @@
 /**
 **      割り込み設定。
 **
-**      @file   kernel/SetupInterrupt.c
+**      @file   initkernel/SetupInterrupt.c
 **/
 
 #include    "Descriptors.h"

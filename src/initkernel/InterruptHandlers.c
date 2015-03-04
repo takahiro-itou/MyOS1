@@ -11,7 +11,7 @@
 /**
 **      割り込みハンドラ。
 **
-**      @file   kernel/InterruptHandlers.c
+**      @file   initkernel/InterruptHandlers.c
 **/
 
 void  _int_21_handler(void)

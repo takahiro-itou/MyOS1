@@ -11,7 +11,7 @@
 /**
 **      セグメント設定。
 **
-**      @file   kernel/SetupSegment.S
+**      @file   initkernel/SetupSegment.S
 **/
 
         .code32

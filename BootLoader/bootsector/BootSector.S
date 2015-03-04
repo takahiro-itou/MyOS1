@@ -11,7 +11,7 @@
 /**
 **      ブートセクタ。
 **
-**      @file   assembly/bootsector/BootSector.S
+**      @file   bootsector/BootSector.S
 **/
 
 #include    "MemoryMap.h"

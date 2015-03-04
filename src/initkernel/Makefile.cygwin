@@ -19,8 +19,7 @@ KERNEL_0_OBJS  =  \
 SYSDEV_FLOPPY    =  /proc/sys/Device/ImDisk0
 CPDEST_FLOPPY    =  /cygdrive/a
 
-AS_CMN_DIR       =  ../assembly/common
-CPP_INCLUDE_DIR  =  ../include
+CPP_INCLUDE_DIR  =  ../../include
 
 ##
 ##    Commands.
@@ -28,6 +27,7 @@ CPP_INCLUDE_DIR  =  ../include
 
 AS      =  /usr/bin/i686-pc-linux-gnu-as
 CC      =  /usr/bin/i686-pc-linux-gnu-gcc
+CCAS    =  /usr/bin/i686-pc-linux-gnu-gcc
 LD      =  /usr/bin/i686-pc-linux-gnu-ld
 
 CP      =  cp
@@ -61,9 +61,9 @@ install    :  $(KERNEL_0_IMG)
 ##    Compile and Link Flags.
 ##
 
-ASFLAGS   =  -I $(AS_CMN_DIR)
-CFLAGS    =  -I $(AS_CMN_DIR)  -I $(CPP_INCLUDE_DIR)
-CCFLAGS   =  -I $(AS_CMN_DIR)  -I $(CPP_INCLUDE_DIR)
+ASFLAGS    =
+CFLAGS     =  -I $(CPP_INCLUDE_DIR)
+CCASFLAGS  =  -I $(CPP_INCLUDE_DIR)
 
 ##
 ##    Build.
@@ -71,7 +71,7 @@ CCFLAGS   =  -I $(AS_CMN_DIR)  -I $(CPP_INCLUDE_DIR)
 
 $(KERNEL_0_IMG)  :  $(KERNEL_0_OBJS)
 	$(LD)  -Map $(KERNEL_0_IMG:%.img=%.map)  \
-        -T Kernel0.ls  -nostdlib             \
+        -T LinkerScript  -nostdlib           \
         -o $@  $(KERNEL_0_OBJS)
 
 ##
@@ -79,20 +79,17 @@ $(KERNEL_0_IMG)  :  $(KERNEL_0_OBJS)
 ##
 
 .c.o  :
-	$(CC)  -o $@  $(CFLAGS)   -Wa,-alm=$(@:%.o=%.lst)  -c  $<
-
-.s.o  :
-	$(AS)  -o $@  $(ASFLAGS)      -alm=$(@:%.o=%.lst)      $<
+	$(CC)    -o $@  $(CFLAGS)     -Wa,-alm=$(@:%.o=%.lst)  -c  $<
 
 .S.o  :
-	$(CC)  -o $@  $(CCFLAGS)  -Wa,-alm=$(@:%.o=%.lst)  -c  $<
+	$(CCAS)  -o $@  $(CCASFLAGS)  -Wa,-alm=$(@:%.o=%.lst)  -c  $<
 
 ##
 ##
 ##
 
 $(KERNEL_0_IMG:%.img=%.o)  :  \
-        Kernel0.ls
+        LinkerScript
 
 KernelEntry.o  :  Makefile
 KernelMain.o  :  Makefile  \

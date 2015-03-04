@@ -3,7 +3,7 @@
 ##    List of Sub Directory.
 ##
 
-SUBDIRS  =  bootsector  ipl
+SUBDIRS  =  bootsector  initloader
 
 ##
 ##    List of Files.
@@ -23,8 +23,9 @@ AS_CMN_DIR       =  common
 ##
 
 AS      =  /usr/bin/i686-pc-linux-gnu-as
-CC      =  /usr/bin/i686-pc-linux-gnu-gcc
+CCAS    =  /usr/bin/i686-pc-linux-gnu-gcc
 LD      =  /usr/bin/i686-pc-linux-gnu-ld
+
 CP      =  cp
 DISASM  =  objdump
 
@@ -55,15 +56,5 @@ $(SUBDIRS)  :  RECURSIVE
 
 ##
 ##    Suffix Rules.
-##
-
-.s.o  :
-	$(AS)  -o $@  -I $(AS_CMN_DIR)  -a=$(@:%.o=%.lst)  $<
-
-.S.o  :
-	$(CC)  -o $@  -c  -I ../include  -Wa,-a=$(@:%.o=%.lst)  $<
-
-##
-##
 ##
 

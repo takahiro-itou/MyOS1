@@ -11,7 +11,7 @@
 /**
 **      カーネルの起動。
 **
-**      @file   assembly/ipl/StartKernel.S
+**      @file   initloader/StartKernel.S
 **/
 
 #include    "MemoryMap.h"

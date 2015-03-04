@@ -11,7 +11,7 @@
 /**
 **      エントリポイント。
 **
-**      @file   assembly/ipl/EntryPoint.S
+**      @file   initloader/EntryPoint.S
 **/
 
 #include    "MemoryMap.h"

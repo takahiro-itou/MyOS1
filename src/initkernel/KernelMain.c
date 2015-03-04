@@ -11,7 +11,7 @@
 /**
 **      カーネルの定義。
 **
-**      @file   kernel/KernelMain.c
+**      @file   initkernel/KernelMain.c
 **/
 
 #include    "Descriptors.h"

@@ -1,14 +1,18 @@
 //  -*-  coding: utf-8; mode: asm  -*-  //
 /*************************************************************************
 **                                                                      **
-**          Fat12Bpb.inc                                                **
+**                      --  My Operating System --                      **
 **                                                                      **
 **          Copyright (C), 2015-2015, Takahiro Itou                     **
 **          All Rights Reserved.                                        **
 **                                                                      **
 *************************************************************************/
 
-
+/**
+**      ディスクパラメータ。
+**
+**      @file   common/Fat12Bpb.inc
+**/
 
 BPB_OEMName:            .ASCII  "MyOS1   "
 BPB_BytesPerSector:     .WORD   512

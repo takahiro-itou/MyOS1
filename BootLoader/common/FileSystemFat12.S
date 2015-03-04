@@ -11,7 +11,7 @@
 /**
 **      ファイルシステム解析。
 **
-**      @file   assembly/common/FileSystemFat12.S
+**      @file   common/FileSystemFat12.S
 **/
 
 //----------------------------------------------------------------

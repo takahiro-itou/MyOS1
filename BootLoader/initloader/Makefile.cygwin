@@ -24,7 +24,7 @@ CPP_INCLUDE_DIR  =  ../../include
 ##
 
 AS      =  /usr/bin/i686-pc-linux-gnu-as
-CC      =  /usr/bin/i686-pc-linux-gnu-gcc
+CCAS    =  /usr/bin/i686-pc-linux-gnu-gcc
 LD      =  /usr/bin/i686-pc-linux-gnu-ld
 
 CP      =  cp
@@ -35,7 +35,7 @@ DISASM  =  objdump
 ##
 
 .PHONY     :  all  clean  cleanall  cleanobj  disasm  install
-.SUFFIXES  :  .o  .s  .S
+.SUFFIXES  :  .o  .S
 
 all       :  $(IPL_BIN)
 
@@ -67,16 +67,16 @@ $(SUBDIRS)  :  RECURSIVE
 ##    Compile and Link Flags.
 ##
 
-ASFLAGS   =  -I $(AS_CMN_DIR)
-CCFLAGS   =  -c  -I $(AS_CMN_DIR)  -I $(CPP_INCLUDE_DIR)
+ASFLAGS    =  -I $(AS_CMN_DIR)
+CCASFLAGS  =  -I $(AS_CMN_DIR)  -I $(CPP_INCLUDE_DIR)
 
 ##
 ##    Build.
 ##
 
-$(IPL_BIN)  :  $(IPL_BIN_OBJS)  Ipl.ls
+$(IPL_BIN)  :  $(IPL_BIN_OBJS)  LinkerScript
 	$(LD)  -Map $(IPL_BIN:%.bin=%.map)  \
-        -T Ipl.ls  -nostdlib            \
+        -T LinkerScript  -nostdlib      \
         -o $@  $(IPL_BIN_OBJS)
 
 InstallFiles  :  $(IPL_BIN)
@@ -86,11 +86,8 @@ InstallFiles  :  $(IPL_BIN)
 ##    Suffix Rules.
 ##
 
-.s.o  :
-	$(AS)  -o $@  $(ASFLAGS)      -alm=$(@:%.o=%.lst)  $<
-
 .S.o  :
-	$(CC)  -o $@  $(CCFLAGS)  -Wa,-alm=$(@:%.o=%.lst)  $<
+	$(CCAS)  -o $@  $(CCASFLAGS)  -Wa,-alm=$(@:%.o=%.lst)  -c  $<
 
 ##
 ##
@@ -101,9 +98,9 @@ EntryPoint.o  :  Makefile  \
         $(AS_CMN_DIR)/FloppyDisk.S        \
         $(AS_CMN_DIR)/WriteString16.S     \
         $(CPP_INCLUDE_DIR)/Descriptors.h  \
-        Ipl.ls
+        LinkerScript
 
 StartMain.o  :  Makefile  \
         $(AS_CMN_DIR)/Console32.S  \
-        Ipl.ls
+        LinkerScript
 

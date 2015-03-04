@@ -11,7 +11,7 @@
 /**
 **      割り込みハンドラのエントリポイント。
 **
-**      @file   kernel/InterruptEntries.S
+**      @file   initkernel/InterruptEntries.S
 **/
 
         .code32

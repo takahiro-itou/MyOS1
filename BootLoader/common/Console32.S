@@ -11,7 +11,7 @@
 /**
 **      コンソール関連。
 **
-**      @file   assembly/common/Console32.S
+**      @file   common/Console32.S
 **/
 
 #define     VRAM_ADDR   0x000B8000

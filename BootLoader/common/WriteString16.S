@@ -11,7 +11,7 @@
 /**
 **      文字列表示。
 **
-**      @file   assembly/common/WriteString16.S
+**      @file   common/WriteString16.S
 **/
 
 //----------------------------------------------------------------
