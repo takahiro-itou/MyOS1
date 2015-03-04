@@ -3,7 +3,7 @@
 ##    List of Sub Directory.
 ##
 
-SUBDIRS  =  BootLoader  font  src
+SUBDIRS  =  BootLoader  data  src
 
 ##
 ##    List of Files.
