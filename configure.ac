@@ -18,6 +18,7 @@ AC_CONFIG_FILES([
     BootLoader/Makefile
     BootLoader/bootsector/Makefile
     BootLoader/initloader/Makefile
+    data/Makefile
     src/Makefile
     src/initkernel/Makefile
 ])
