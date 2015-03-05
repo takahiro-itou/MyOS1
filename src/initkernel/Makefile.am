@@ -9,14 +9,7 @@ ROOT_BIN_FILES   =  Kernel0.img
 ##    List of Files.
 ##
 
-LINKER_SCRIPT    =  LinkerScript
-KERNEL_0_OBJS  =  \
-        KernelEntry.o        \
-        KernelMain.o         \
-        InterruptEntries.o   \
-        InterruptHandlers.o  \
-        SetupInterrupt.o     \
-        SetupSegment.o
+LINKER_SCRIPT    =  $(srcdir)/LinkerScript
 
 ##
 ##    Environments.
@@ -25,7 +18,7 @@ KERNEL_0_OBJS  =  \
 SYSDEV_FLOPPY    =  /proc/sys/Device/ImDisk0
 CPDEST_FLOPPY    =  /cygdrive/a/
 
-CPP_INCLUDE_DIR  =  ../../include
+CPP_INCLUDE_DIR  =  $(top_srcdir)/include
 
 ##
 ##    Commands.

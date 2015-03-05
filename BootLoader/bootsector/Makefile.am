@@ -9,7 +9,7 @@ BOOT_SECTOR_IMG  =  BootSector.img
 ##    List of Files.
 ##
 
-LINKER_SCRIPT    =  LinkerScript
+LINKER_SCRIPT    =  $(srcdir)/LinkerScript
 
 ##
 ##    Environments.
@@ -17,8 +17,8 @@ LINKER_SCRIPT    =  LinkerScript
 
 SYSDEV_FLOPPY    =  /proc/sys/Device/ImDisk0
 
-AS_CMN_DIR       =  ../common
-CPP_INCLUDE_DIR  =  ../../include
+AS_CMN_DIR       =  $(srcdir)/../common
+CPP_INCLUDE_DIR  =  $(top_srcdir)/include
 
 ##
 ##    Commands.
