@@ -15,6 +15,8 @@ AM_PROG_AS
 
 AC_CONFIG_FILES([
     Makefile
+    BootLoader/Makefile
+    src/Makefile
 ])
 
 AC_OUTPUT

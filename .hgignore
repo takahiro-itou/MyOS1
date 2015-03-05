@@ -6,4 +6,9 @@ syntax: glob
 
 syntax: regexp
 Makefile$
+Makefile\.in$
+\.h\.in$
+^\.config/
+^autom4te\.cache\/
+^configure$
 
