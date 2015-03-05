@@ -16,6 +16,8 @@ AM_PROG_AS
 AC_CONFIG_FILES([
     Makefile
     BootLoader/Makefile
+    BootLoader/bootsector/Makefile
+    BootLoader/initloader/Makefile
     src/Makefile
 ])
 
