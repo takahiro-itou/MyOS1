@@ -3,13 +3,20 @@
 ##    List of Programs.
 ##
 
-ROOT_BIN_FILES   =  IplF12.bin
+ROOT_BIN_FILES   =  Kernel0.img
 
 ##
 ##    List of Files.
 ##
 
 LINKER_SCRIPT    =  LinkerScript
+KERNEL_0_OBJS  =  \
+        KernelEntry.o        \
+        KernelMain.o         \
+        InterruptEntries.o   \
+        InterruptHandlers.o  \
+        SetupInterrupt.o     \
+        SetupSegment.o
 
 ##
 ##    Environments.
@@ -18,7 +25,6 @@ LINKER_SCRIPT    =  LinkerScript
 SYSDEV_FLOPPY    =  /proc/sys/Device/ImDisk0
 CPDEST_FLOPPY    =  /cygdrive/a/
 
-AS_CMN_DIR       =  ../common
 CPP_INCLUDE_DIR  =  ../../include
 
 ##
@@ -26,6 +32,7 @@ CPP_INCLUDE_DIR  =  ../../include
 ##
 
 AS      =  /usr/bin/i686-pc-linux-gnu-as
+CC      =  /usr/bin/i686-pc-linux-gnu-gcc
 CCAS    =  /usr/bin/i686-pc-linux-gnu-gcc
 LD      =  /usr/bin/i686-pc-linux-gnu-ld
 
@@ -36,7 +43,8 @@ DD      =  dd
 ##    Compile and Link Flags.
 ##
 
-AM_CCASFLAGS  =  -I $(AS_CMN_DIR)  -I $(CPP_INCLUDE_DIR)
+AM_CFLAGS     =  -I $(CPP_INCLUDE_DIR)
+AM_CCASFLAGS  =  -I $(CPP_INCLUDE_DIR)
 AM_LDFLAGS    =  -nostdlib
 
 ##
@@ -49,13 +57,15 @@ noinst_PROGRAMS  =  $(ROOT_BIN_FILES)
 ##    Build Programs.
 ##
 
-IplF12_bin_SOURCES  =  \
-        EntryPoint.S                     \
-        ProtectMode.S                    \
-        StartKernel.S                    \
-        $(AS_CMN_DIR)/Fat12Bpb.inc       \
+Kernel0_img_SOURCES  =  \
+        KernelEntry.S        \
+        KernelMain.c         \
+        InterruptEntries.S   \
+        InterruptHandlers.c  \
+        SetupInterrupt.c     \
+        SetupSegment.S       \
         $(LINKER_SCRIPT)
-IplF12_bin_LINK     =  $(LD)  -T $(LINKER_SCRIPT)  -o $@
+Kernel0_img_LINK    =  $(LD)  -T $(LINKER_SCRIPT)  -o $@
 
 ##
 ##    Install Programs.
@@ -63,4 +73,5 @@ IplF12_bin_LINK     =  $(LD)  -T $(LINKER_SCRIPT)  -o $@
 
 install  :  $(ROOT_BIN_FILES)
 	$(CP)  -pv  $^  $(CPDEST_FLOPPY)
+
 

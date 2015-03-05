@@ -19,6 +19,7 @@ AC_CONFIG_FILES([
     BootLoader/bootsector/Makefile
     BootLoader/initloader/Makefile
     src/Makefile
+    src/initkernel/Makefile
 ])
 
 AC_OUTPUT

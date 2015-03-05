@@ -1,8 +1,5 @@
 
 syntax: glob
-*.img
-*.lst
-*.o
 
 syntax: regexp
 Makefile$
