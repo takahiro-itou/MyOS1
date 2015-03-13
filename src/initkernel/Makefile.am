@@ -24,11 +24,6 @@ CPP_INCLUDE_DIR  =  $(top_srcdir)/include
 ##    Commands.
 ##
 
-AS      =  /usr/bin/i686-pc-linux-gnu-as
-CC      =  /usr/bin/i686-pc-linux-gnu-gcc
-CCAS    =  /usr/bin/i686-pc-linux-gnu-gcc
-LD      =  /usr/bin/i686-pc-linux-gnu-ld
-
 CP      =  cp
 DD      =  dd
 
@@ -58,7 +53,8 @@ Kernel0_img_SOURCES  =  \
         SetupInterrupt.c     \
         SetupSegment.S       \
         $(LINKER_SCRIPT)
-Kernel0_img_LINK    =  $(LD)  -T $(LINKER_SCRIPT)  -o $@
+Kernel0_img_LINK     =  \
+    $(LD)  -Map Kernel0.map  -T $(LINKER_SCRIPT)  -nostdlib  -o $@
 
 ##
 ##    Install Programs.
@@ -66,5 +62,4 @@ Kernel0_img_LINK    =  $(LD)  -T $(LINKER_SCRIPT)  -o $@
 
 install  :  $(ROOT_BIN_FILES)
 	$(CP)  -pv  $^  $(CPDEST_FLOPPY)
-
 

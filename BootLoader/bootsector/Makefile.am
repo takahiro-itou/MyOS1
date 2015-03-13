@@ -24,10 +24,6 @@ CPP_INCLUDE_DIR  =  $(top_srcdir)/include
 ##    Commands.
 ##
 
-AS      =  /usr/bin/i686-pc-linux-gnu-as
-CCAS    =  /usr/bin/i686-pc-linux-gnu-gcc
-LD      =  /usr/bin/i686-pc-linux-gnu-ld
-
 CP      =  cp
 DD      =  dd
 
