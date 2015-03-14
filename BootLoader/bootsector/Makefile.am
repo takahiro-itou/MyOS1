@@ -1,0 +1,69 @@
+
+##
+##    List of Programs.
+##
+
+BOOT_SECTOR_IMG  =  BootSector.img
+
+##
+##    List of Files.
+##
+
+LINKER_SCRIPT    =  $(srcdir)/LinkerScript
+
+##
+##    Environments.
+##
+
+SYSDEV_FLOPPY    =  /proc/sys/Device/ImDisk0
+
+AS_CMN_DIR       =  $(srcdir)/../common
+CPP_INCLUDE_DIR  =  $(top_srcdir)/include
+
+##
+##    Commands.
+##
+
+CP      =  cp
+DD      =  dd
+
+##
+##    Compile and Link Flags.
+##
+
+AM_CCASFLAGS  =  \
+        -I $(AS_CMN_DIR)  -I $(CPP_INCLUDE_DIR)  \
+        -Wa,-alm=$(@:%.o=%.lst)
+AM_LDFLAGS    =  -Map $@.map  -nostdlib
+
+##
+##    List of Installs.
+##
+
+noinst_PROGRAMS  =  $(BOOT_SECTOR_IMG)
+
+##
+##    Build Programs.
+##
+
+BootSector_img_SOURCES  =  \
+        BootSector.S                     \
+        $(AS_CMN_DIR)/Fat12Bpb.inc       \
+        $(LINKER_SCRIPT)
+BootSector_img_LINK     =  \
+        $(LD)  $(AM_LDFLAGS)  -T $(LINKER_SCRIPT)  -o $@
+
+##
+##    Install Programs.
+##
+
+install  :  $(BOOT_SECTOR_IMG)
+	$(DD)  if=$(BOOT_SECTOR_IMG)  bs=512  count=1  of=$(SYSDEV_FLOPPY)
+
+##
+##    Clean Extra Files.
+##
+
+clean-local  :
+	$(RM)  *.lst  *.map
+
