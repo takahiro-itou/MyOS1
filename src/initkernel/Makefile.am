@@ -48,6 +48,7 @@ noinst_PROGRAMS  =  $(ROOT_BIN_FILES)
 Kernel0_img_SOURCES  =  \
         KernelEntry.S        \
         KernelMain.c         \
+        InitPIC.S            \
         InterruptEntries.S   \
         InterruptHandlers.c  \
         SetupInterrupt.c     \

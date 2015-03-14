@@ -28,33 +28,6 @@ typedef  struct
 
 //========================================================================
 
-#define     PIC0_COMMAND_PORT   0x0020
-#define     PIC0_STATUS_PORT    0x0020
-#define     PIC0_DATA_PORT      0x0021
-#define     PIC0_IMR_PORT       0x0021
-
-#define     PIC1_COMMAND_PORT   0x00A0
-#define     PIC1_STATUS_PORT    0x00A0
-#define     PIC1_IMR_PORT       0x00A1
-#define     PIC1_DATA_PORT      0x00A1
-
-#define     PIC_ICW1            0x11
-
-#define     PIC0_ICW2           0x20
-#define     PIC1_ICW2           0x28
-
-#define     PIC0_ICW3           (1 << 2)
-#define     PIC1_ICW3           0x02
-
-#define     PIC0_ICW4           0x01
-#define     PIC1_ICW4           0x01
-
-//----------------------------------------------------------------
-
-void  initPIC(void)
-{
-
-}
 
 //----------------------------------------------------------------
 /**
