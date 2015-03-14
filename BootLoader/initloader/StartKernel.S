@@ -50,8 +50,8 @@ _startProtet32:
         cld
         movl    $KERNEL0_TEMP_ADDR,  %esi
         movl    $KERNEL0_BASE_ADDR,  %edi
-        movl    $512,   %ecx    /*  ダミー。    */
-        shrl    $2,     %ecx
+        movl    (KERNEL_SIZE),  %ecx
+        shrl    $0x02,  %ecx
         rep     movsd
 
         call    .SHOW_OK_MESSAGE
@@ -121,6 +121,13 @@ _checkEnableA20:
         ret
 
 #include    "Console32.S"
+
+//========================================================================
+//
+//      データセクション。
+//
+
+.section    .data
 
 //----------------------------------------------------------------
 //

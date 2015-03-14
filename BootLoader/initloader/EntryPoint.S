@@ -17,6 +17,7 @@
 #include    "MemoryMap.h"
 
         .code16
+        .global     KERNEL_SIZE
 
 .section    .text
 
@@ -44,6 +45,7 @@ ENTRY_POINT:
         movw    $MSG_START_LOADING,  %si
         call    WriteString
 
+        /*  カーネルイメージを検索。    */
         movw    $MSG_FIND_KERNEL,  %si
         call    WriteString
 
@@ -57,19 +59,22 @@ ENTRY_POINT:
         pushw   %si
         call    .SHOW_OK_MESSAGE
 
+        /*  カーネルイメージ読み込み。  */
         movw    $MSG_READ_KERNEL,  %si
         call    WriteString
 
         popw    %si
         movw    $KERNEL0_TEMP_ADDR,  %bx
+        xorl    %eax,  %eax
         call    ReadFile
+        movw    %ax,  (KERNEL_SIZE)
         call    .SHOW_OK_MESSAGE
 
-        /*  フォントファイル読み込み。  */
+        /*  フォントファイルを検索。    */
         movw    $MSG_FIND_FONT,  %si
         call    WriteString
 
-        movw    $LOAD_ADDR_ROOTDIR,    %SI
+        movw    $LOAD_ADDR_ROOTDIR,    %si
         movw    (BPB_RootEntryCount),  %cx
         movw    $.FONT_ASCII_NAME,     %di
         call    FindRootDirectoryEntry
@@ -79,6 +84,7 @@ ENTRY_POINT:
         pushw   %si
         call    .SHOW_OK_MESSAGE
 
+        /*  フォントファイル読み込み。  */
         movw    $MSG_READ_FONT,  %si
         call    WriteString
 
@@ -152,6 +158,11 @@ ENTRY_POINT:
 
 #include    "WriteString16.S"
 
+//========================================================================
+//
+//      データセクション。
+//
+
 .section    .data
 
 //----------------------------------------------------------------
@@ -174,3 +185,13 @@ MSG_FIND_FONT:
         .string     "Find Font File ..."
 MSG_READ_FONT:
         .string     "Read Font File ..."
+
+//========================================================================
+//
+//      変数領域。
+//
+
+.section    .bss
+
+KERNEL_SIZE:
+        .long       0
