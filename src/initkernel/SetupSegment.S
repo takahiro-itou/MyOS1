@@ -16,8 +16,8 @@
 
         .code32
 
-        .global     _setupGDT
-        .global     _IDT_POINT
+        .global     setupGDT
+        .global     IDT_POINT
 
 //----------------------------------------------------------------
 /**   GDT をセットアップする。
@@ -26,7 +26,7 @@
 **  @attention  破壊されるレジスタ：無し。
 **/
 
-_setupGDT:
+setupGDT:
         lgdt    (GDT_POINT)
         ret
 
@@ -46,13 +46,13 @@ _setupGDT:
 #define     GDT_DS      0x02
 #define     GDT_CS      0x0A
 
-GDT_POINT:
         .align  8
+GDT_POINT:
         .word   .GDT_END - .GDT_ENTRY - 1
         .long   .GDT_ENTRY
 
         .align  8
-_IDT_POINT:
+IDT_POINT:
 _IDT_POINT_LIMIT:
         .word   256 * 8 - 1
 _IDT_POINT_BASE:
