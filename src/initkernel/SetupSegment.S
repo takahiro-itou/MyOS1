@@ -17,7 +17,18 @@
         .code32
 
         .global     setupGDT
-        .global     IDT_POINT
+        .global     loadKernelIDT
+
+//----------------------------------------------------------------
+/**   IDT をレジスタにロードする。
+**
+**  @return     無し。
+**  @attention  破壊されるレジスタ：無し。
+**/
+
+loadKernelIDT:
+        lidtl   (KERNEL0_IDT_POINT)
+        ret
 
 //----------------------------------------------------------------
 /**   GDT をセットアップする。
@@ -27,7 +38,7 @@
 **/
 
 setupGDT:
-        lgdt    (GDT_POINT)
+        lgdtl   (KERNEL0_GDT_POINT)
         ret
 
 //========================================================================
@@ -47,20 +58,20 @@ setupGDT:
 #define     GDT_CS      0x0A
 
         .align  8
-GDT_POINT:
-        .word   .GDT_END - .GDT_ENTRY - 1
-        .long   .GDT_ENTRY
+KERNEL0_GDT_POINT:
+        .word   .KERNEL0_GDT_END - .KERNEL0_GDT_ENTRY - 1
+        .long   .KERNEL0_GDT_ENTRY
 
         .align  8
-IDT_POINT:
-_IDT_POINT_LIMIT:
+KERNEL0_IDT_POINT:
+_KERNEL0_IDT_POINT_LIMIT:
         .word   256 * 8 - 1
-_IDT_POINT_BASE:
+_KERNEL0_IDT_POINT_BASE:
         .long   INTGATE_DESCRIPTOR_ADDR
 
         .align  32
 
-.GDT_ENTRY:
+.KERNEL0_GDT_ENTRY:
         //  Null Descriptor.
         .word   0x0000          /*  Limit Low           */
         .word   0x0000          /*  Base Address Low    */
@@ -77,4 +88,4 @@ _IDT_POINT_BASE:
         SET_GDT_ENTRY( GDT_KERNEL_32,  GDT_DS, 0x00000000, 0xFFFFFFFF )
 //        SET_GDT_ENTRY( GDT_KERNEL_64,  GDT_CS, 0x00000000, 0xFFFFFFFF )
 //        SET_GDT_ENTRY( GDT_KERNEL_64,  GDT_DS, 0x00000000, 0xFFFFFFFF )
-.GDT_END:
+.KERNEL0_GDT_END:

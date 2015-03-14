@@ -28,6 +28,8 @@ void  startKernel()
     unsigned char * ptrVRAM = (unsigned char *)(0x000A0000);
 
     setupDescriptors();
+    initPIC();
+    __asm__ __volatile__ ( "sti" );
 
     //  画面を消去。    //
     for ( i = 0; i < 320 * 200; ++ i ) {
