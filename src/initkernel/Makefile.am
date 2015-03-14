@@ -32,8 +32,8 @@ DD      =  dd
 ##
 
 AM_CFLAGS     =  -I $(CPP_INCLUDE_DIR)
-AM_CCASFLAGS  =  -I $(CPP_INCLUDE_DIR)
-AM_LDFLAGS    =  -nostdlib
+AM_CCASFLAGS  =  -I $(CPP_INCLUDE_DIR)  -Wa,-alm=$(@:%.o=%.lst)
+AM_LDFLAGS    =  -Map $@.map  -nostdlib
 
 ##
 ##    List of Installs.
@@ -54,7 +54,7 @@ Kernel0_img_SOURCES  =  \
         SetupSegment.S       \
         $(LINKER_SCRIPT)
 Kernel0_img_LINK     =  \
-    $(LD)  -Map Kernel0.map  -T $(LINKER_SCRIPT)  -nostdlib  -o $@
+    $(LD)  $(AM_LDFLAGS)  -T $(LINKER_SCRIPT)  -o $@
 
 ##
 ##    Install Programs.
@@ -62,4 +62,11 @@ Kernel0_img_LINK     =  \
 
 install  :  $(ROOT_BIN_FILES)
 	$(CP)  -pv  $^  $(CPDEST_FLOPPY)
+
+##
+##    Clean Extra Files.
+##
+
+clean-local  :
+	$(RM)  *.lst  *.map
 

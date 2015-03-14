@@ -31,7 +31,10 @@ DD      =  dd
 ##    Compile and Link Flags.
 ##
 
-AM_CCASFLAGS  =  -I $(AS_CMN_DIR)  -I $(CPP_INCLUDE_DIR)
+AM_CCASFLAGS  =  \
+        -I $(AS_CMN_DIR)  -I $(CPP_INCLUDE_DIR)  \
+        -Wa,-alm=$(@:%.o=%.lst)
+AM_LDFLAGS    =  -Map $@.map  -nostdlib
 
 ##
 ##    List of Installs.
@@ -47,7 +50,8 @@ BootSector_img_SOURCES  =  \
         BootSector.S                     \
         $(AS_CMN_DIR)/Fat12Bpb.inc       \
         $(LINKER_SCRIPT)
-BootSector_img_LINK     =  $(LD)  -T $(LINKER_SCRIPT)  -o $@
+BootSector_img_LINK     =  \
+        $(LD)  $(AM_LDFLAGS)  -T $(LINKER_SCRIPT)  -o $@
 
 ##
 ##    Install Programs.
@@ -55,4 +59,11 @@ BootSector_img_LINK     =  $(LD)  -T $(LINKER_SCRIPT)  -o $@
 
 install  :  $(BOOT_SECTOR_IMG)
 	$(DD)  if=$(BOOT_SECTOR_IMG)  bs=512  count=1  of=$(SYSDEV_FLOPPY)
+
+##
+##    Clean Extra Files.
+##
+
+clean-local  :
+	$(RM)  *.lst  *.map
 

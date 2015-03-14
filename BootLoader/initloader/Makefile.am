@@ -32,8 +32,10 @@ DD      =  dd
 ##    Compile and Link Flags.
 ##
 
-AM_CCASFLAGS  =  -I $(AS_CMN_DIR)  -I $(CPP_INCLUDE_DIR)
-AM_LDFLAGS    =  -nostdlib
+AM_CCASFLAGS  =  \
+        -I $(AS_CMN_DIR)  -I $(CPP_INCLUDE_DIR)  \
+        -Wa,-alm=$(@:%.o=%.lst)
+AM_LDFLAGS    =  -Map $@.map  -nostdlib
 
 ##
 ##    List of Installs.
@@ -51,7 +53,8 @@ IplF12_bin_SOURCES  =  \
         StartKernel.S                    \
         $(AS_CMN_DIR)/Fat12Bpb.inc       \
         $(LINKER_SCRIPT)
-IplF12_bin_LINK     =  $(LD)  -T $(LINKER_SCRIPT)  -o $@
+IplF12_bin_LINK     =  \
+        $(LD)  $(AM_LDFLAGS)  -T $(LINKER_SCRIPT)  -o $@
 
 ##
 ##    Install Programs.
@@ -59,4 +62,11 @@ IplF12_bin_LINK     =  $(LD)  -T $(LINKER_SCRIPT)  -o $@
 
 install  :  $(ROOT_BIN_FILES)
 	$(CP)  -pv  $^  $(CPDEST_FLOPPY)
+
+##
+##    Clean Extra Files.
+##
+
+clean-local  :
+	$(RM)  *.lst  *.map
 
