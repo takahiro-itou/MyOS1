@@ -16,8 +16,8 @@
 
 #define     MULTIBOOT_LOADER_MAGIC      0x2BADB002
 
-#if defined(  MYOS1_INCLUDE_FROM_C )
+#if !defined(  MYOS1_INCLUDE_FROM_ASM )
 
-#endif  //  if defined(MYOS1_INCLUDE_FROM_C)    //
+#endif  //  !defined( MYOS1_INCLUDE_FROM_ASM )
 
 #endif

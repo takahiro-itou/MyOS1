@@ -14,6 +14,7 @@
 **      @file   initkernel/SetupSegment.S
 **/
 
+#define     MYOS1_INCLUDE_FROM_ASM
 #include    "BootInfo.h"
 
         .code32
