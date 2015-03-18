@@ -75,7 +75,7 @@ ENTRY_POINT:
         testw   %si,  %si
         jz      .LOAD_FAILURE
 
-        movw    $0x1000,  %bx
+        movw    $MM_ADDR_LOAD_IPL,  %bx
         call    ReadFile
         cmpw    $0x1000,  %ax       /*  IPL は 4 KB 以内。  */
         ja      .IPL_SIZE_ERROR
