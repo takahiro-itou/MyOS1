@@ -50,16 +50,16 @@ ENTRY_POINT:
         mulb    (BPB_NumberOfFATs)
         movw    %ax,  %cx       /*  読み込むセクタ数。  */
         movw    (BPB_RsvdSectorCount),  %si
-        movw    $LOAD_ADDR_FAT,   %bx
+        movw    $MM_ADDR_LOAD_FAT,  %bx
         call    ReadSectors
 
         movw    $0x0020,  %ax
         mulw    (BPB_RootEntryCount)
-        addw    (BPB_BytesPerSector),  %ax
+        addw    (BPB_BytesPerSector),   %ax
         decw    %ax
         divw    (BPB_BytesPerSector)
         movw    %ax,  %cx       /*  読み込むセクタ数。  */
-        movw    $LOAD_ADDR_ROOTDIR,    %bx
+        movw    $MM_ADDR_LOAD_ROOT_DIR,  %bx
         call    ReadSectors
 
         /*  この時点で SI レジスタに、          **
@@ -68,7 +68,7 @@ ENTRY_POINT:
         movw    %si,  %bp
 
         /*  ファイルシステムの解析。    */
-        movw    $LOAD_ADDR_ROOTDIR,    %si
+        movw    $MM_ADDR_LOAD_ROOT_DIR,  %si
         movw    (BPB_RootEntryCount),  %cx
         movw    $.IPL_IMAGE_NAME,      %di
         call    FindRootDirectoryEntry

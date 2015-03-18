@@ -84,7 +84,7 @@ ReadFile:
         movw    %ax,  %si
         shr     $1,   %si
         addw    %ax,  %si
-        addw    $LOAD_ADDR_FAT,  %si
+        addw    $MM_ADDR_LOAD_FAT,  %si
 
         testw   $0x0001,  %ax
         movw    (%si),    %ax

@@ -49,7 +49,7 @@ ENTRY_POINT:
         movw    $MSG_FIND_KERNEL,  %si
         call    WriteString
 
-        movw    $LOAD_ADDR_ROOTDIR,    %si
+        movw    $MM_ADDR_LOAD_ROOT_DIR,  %si
         movw    (BPB_RootEntryCount),  %cx
         movw    $.KERNEL_IMAGE_NAME,   %di
         call    FindRootDirectoryEntry
@@ -74,7 +74,7 @@ ENTRY_POINT:
         movw    $MSG_FIND_FONT,  %si
         call    WriteString
 
-        movw    $LOAD_ADDR_ROOTDIR,    %si
+        movw    $MM_ADDR_LOAD_ROOT_DIR,  %si
         movw    (BPB_RootEntryCount),  %cx
         movw    $.FONT_ASCII_NAME,     %di
         call    FindRootDirectoryEntry
