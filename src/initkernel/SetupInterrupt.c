@@ -41,7 +41,7 @@ setGateDesc(
         const  int  segment,
         const  int  flags)
 {
-    GateDesc *  gd  = (GateDesc *)(INTGATE_DESCRIPTOR_ADDR) + idx;
+    GateDesc *  gd  = (GateDesc *)(MM_ADDR_INTGATE_DESCRIPTOR) + idx;
     gd->ofsLow  = (offset & 0xFFFF);
     gd->segment = segment;
     gd->unused  = 0;

@@ -110,9 +110,17 @@
 /**
 **    割り込み記述子を配置するアドレス。
 **
-**  ベース：0x00268000 - 0x002687FF
-**  サイズ：0x00000800 (2048)
+**  ベース：0x0026F000 - 0x0026F7FF
+**  サイズ：0x00000800 (2,048)
 **/
-#define     INTGATE_DESCRIPTOR_ADDR     0x00268000
+#define     MM_ADDR_INTGATE_DESCRIPTOR      0x0026F000
+
+/**
+**    大域セグメント記述子を配置するアドレス。
+**
+**  ベース：0x00270000 - 0x0027FFFF
+**  サイズ：0x00010000 (65,536)
+**/
+#define     MM_ADDR_GLOBAL_DESCRIPTOR       0x00270000
 
 #endif

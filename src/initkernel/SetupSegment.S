@@ -67,7 +67,7 @@ KERNEL0_IDT_POINT:
 _KERNEL0_IDT_POINT_LIMIT:
         .word   256 * 8 - 1
 _KERNEL0_IDT_POINT_BASE:
-        .long   INTGATE_DESCRIPTOR_ADDR
+        .long   MM_ADDR_INTGATE_DESCRIPTOR
 
         .align  32
 
