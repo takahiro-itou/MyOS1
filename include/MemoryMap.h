@@ -85,18 +85,27 @@
 
 /**
 **    フォントファイルをロードするアドレス。
+**
+**  ベース：0x00006000 - 0x00006FFF
+**  サイズ：0x00001000 (4,096)
 **/
-#define     FONT_ASCII_ADDR         0x00002000
+#define     MM_ADDR_FONT_ASCII              0x6000
 
 /**
 **    カーネルを壱時的にロードしておくアドレス。
+**
+**  ベース：0x00008000 - 0x0000FFFF
+**  サイズ：0x00008000 (32,768)
 **/
-#define     KERNEL0_TEMP_ADDR       0x00004000
+#define     MM_ADDR_KERNEL0_TEMP            0x8000
 
 /**
 **    カーネルをロードするアドレス。
+**
+**  ベース：0x00100000 - 0x00267FFF
+**  サイズ：0x00168000 (1,474,560)
 **/
-#define     KERNEL0_BASE_ADDR       0x00100000
+#define     MM_ADDR_KERNEL0_BASE            0x00100000
 
 /**
 **    割り込み記述子を配置するアドレス。

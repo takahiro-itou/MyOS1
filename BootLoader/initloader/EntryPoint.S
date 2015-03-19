@@ -64,7 +64,7 @@ ENTRY_POINT:
         call    WriteString
 
         popw    %si
-        movw    $KERNEL0_TEMP_ADDR,  %bx
+        movw    $MM_ADDR_KERNEL0_TEMP,  %bx
         xorl    %eax,  %eax
         call    ReadFile
         movw    %ax,  (KERNEL_SIZE)
@@ -89,7 +89,7 @@ ENTRY_POINT:
         call    WriteString
 
         popw    %si
-        movw    $FONT_ASCII_ADDR,  %bx
+        movw    $MM_ADDR_FONT_ASCII,  %bx
         call    ReadFile
         call    .SHOW_OK_MESSAGE
 
