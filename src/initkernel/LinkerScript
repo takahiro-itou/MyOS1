@@ -10,5 +10,10 @@ SECTIONS {
         *(.entry);
         *(.text);
     }
+    .  =  ALIGN(0x0200);
+    .data       : {
+        *(.data)
+        .  =  ALIGN(16);
+        *(.dsctbl)
+    }
 }
-

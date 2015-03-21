@@ -115,6 +115,8 @@
 **/
 #define     MM_ADDR_INTGATE_DESCRIPTOR      0x0026F000
 
+#define     MM_SIZE_INTGATE_DESCRIPTOR      (256 * 8)
+
 /**
 **    大域セグメント記述子を配置するアドレス。
 **
@@ -122,5 +124,7 @@
 **  サイズ：0x00010000 (65,536)
 **/
 #define     MM_ADDR_GLOBAL_DESCRIPTOR       0x00270000
+
+#define     MM_SIZE_GLOBAL_DESCRIPTOR       (8192 * 8)
 
 #endif

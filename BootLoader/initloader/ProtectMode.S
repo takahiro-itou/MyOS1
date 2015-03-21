@@ -137,8 +137,10 @@ _setupGDT:
 #define     GDT_CS      0x0A
 
 
+        .align  4
+        .word   0
 GDT_POINT:
-        .word   .GDT_END - .GDT_ENTRY
+        .word   .GDT_END - .GDT_ENTRY - 1
         .long   .GDT_ENTRY
 
         .align  32

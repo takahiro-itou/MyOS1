@@ -46,6 +46,8 @@ setupGDT:
 //      テーブル本体。
 //
 
+.section    .dsctbl
+
 #define     MYOS1_INCLUDE_FROM_ASM      1
 #include    "Descriptors.h"
 #include    "MemoryMap.h"
