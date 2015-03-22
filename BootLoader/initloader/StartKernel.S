@@ -14,7 +14,7 @@
 **      @file   initloader/StartKernel.S
 **/
 
-#include    "MemoryMap.h"
+#include    "common/MemoryMap.h"
 
         .code32
 

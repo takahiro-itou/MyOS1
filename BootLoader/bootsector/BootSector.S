@@ -14,7 +14,7 @@
 **      @file   bootsector/BootSector.S
 **/
 
-#include    "MemoryMap.h"
+#include    "common/MemoryMap.h"
 
         .code16
         .org    0x0000

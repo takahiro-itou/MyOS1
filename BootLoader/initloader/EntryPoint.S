@@ -14,7 +14,7 @@
 **      @file   initloader/EntryPoint.S
 **/
 
-#include    "MemoryMap.h"
+#include    "common/MemoryMap.h"
 
         .code16
         .global     KERNEL_SIZE
