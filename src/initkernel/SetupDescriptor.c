@@ -9,9 +9,9 @@
 *************************************************************************/
 
 /**
-**      割り込み設定。
+**      ディスクリプタ設定。
 **
-**      @file   initkernel/SetupInterrupt.c
+**      @file   initkernel/SetupDescriptor.c
 **/
 
 #include    "Descriptors.h"

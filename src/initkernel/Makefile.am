@@ -51,7 +51,7 @@ Kernel0_img_SOURCES  =  \
         InitPIC.S            \
         InterruptEntries.S   \
         InterruptHandlers.c  \
-        SetupInterrupt.c     \
+        SetupDescriptor.c    \
         SetupSegment.S       \
         $(LINKER_SCRIPT)
 Kernel0_img_LINK     =  \
