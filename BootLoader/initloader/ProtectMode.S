@@ -127,7 +127,7 @@ _setupGDT:
 .section    .gdt
 
 #define     MYOS1_INCLUDE_FROM_ASM      1
-#include    "Descriptors.h"
+#include    "common/Descriptors.h"
 
         /**         FLAGS:                     G, DB, 64, AV, P, LV, S */
 #define     GDT_KERNEL_32   GDT_COMBINE_FLAGS( 1,  1,  0,  0, 1, 00, 1)
