@@ -14,7 +14,7 @@
 **      @file   initkernel/KernelMain.c
 **/
 
-#include    "Descriptors.h"
+#include    "common/Descriptors.h"
 
 void  setupDescriptors()
 {

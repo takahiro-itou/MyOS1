@@ -14,8 +14,8 @@
 **      @file   initkernel/SetupDescriptor.c
 **/
 
-#include    "Descriptors.h"
-#include    "MemoryMap.h"
+#include    "common/Descriptors.h"
+#include    "common/MemoryMap.h"
 
 typedef  struct
 {
